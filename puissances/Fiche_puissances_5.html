@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche remédiation — Lire et écrire les grands nombres</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Sora:wght@400;500;600;700;800&family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=OpenDyslexic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      /* ── Palette écosystème ── */
+      --navy: #1A2C4F;
+      --navy-deep: #142340;
+      --gold: #C28A42;
+      --gold-l: #D4A464;
+      --gold-deep: #B47A35;
+      --gold-dark: #8F5F26;
+      --gold-pale: rgba(212,164,100,.10);
+      --gold-soft: rgba(212,164,100,.18);
+      --gold-bg: rgba(212,164,100,.06);
+      --beige: #F4F2EE;
+      --beige-l: #FAF8F4;
+      --cream: #FDF9F0;
+      --cream-l: #FEFCF5;
+      --white: #FFFFFF;
+      --green: #15A362;
+      --green-dark: #0E7348;
+      --green-l: #E8F5EE;
+      --red: #D42626;
+      --red-dark: #A11717;
+      --red-l: #FEF2F2;
+      --text: #1A1311;
+      --text2: #4A4036;
+      --text3: #8A7F73;
+      --border: rgba(20,19,16,.10);
+
+      --r: 12px;
+      --rl: 16px;
+      --rxl: 22px;
+
+      --or: var(--gold);
+      --or-pale: var(--gold-pale);
+      --or-bord: var(--gold-deep);
+    }
+
+    /* ══ MODE DYS ══════════════════════════════════════════════ */
+    body.dys { font-family:'OpenDyslexic',Arial,sans-serif !important; }
+    body.dys .titre, body.dys .texte-intro, body.dys .q-txt,
+    body.dys .btn, body.dys .feedback, body.dys .regle-texte,
+    body.dys .etape-texte, body.dys .ex-bulle-txt {
+      font-family:'OpenDyslexic',Arial,sans-serif !important;
+      line-height:1.9 !important;
+    }
+
+    /* ══ ANIMATIONS ════════════════════════════════════════════ */
+    @keyframes gradientWave { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes btnGlow {
+      0%   { box-shadow: 0 0 0 0 rgba(194,138,66,0); }
+      50%  { box-shadow: 0 6px 20px rgba(194,138,66,.30), 0 0 0 0 rgba(194,138,66,.10); }
+      100% { box-shadow: 0 0 0 0 rgba(194,138,66,0); }
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(194,138,66,0.45); }
+      50%     { box-shadow: 0 0 0 10px rgba(194,138,66,0); }
+    }
+    @keyframes popIn { 0%{opacity:0;transform:scale(0.5)} 70%{transform:scale(1.1)} 100%{opacity:1;transform:scale(1)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes virguleBounce {
+      0% { transform:translateX(0) scale(1); }
+      50% { transform:translateX(0) scale(1.4); color:var(--gold-deep); }
+      100% { transform:translateX(0) scale(1); }
+    }
+
+    /* ══ BASE ══════════════════════════════════════════════════ */
+    html { height:100%; }
+    body {
+      min-height:100vh;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      font-family:'Inter Tight', system-ui, -apple-system, sans-serif;
+      color:var(--text);
+      background:var(--beige);
+      overflow-y:auto;
+    }
+
+    /* ══ HEADER ════════════════════════════════════════════════ */
+    .header {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:center;
+      padding:16px 28px;
+      background:rgba(244,242,238,.75);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+      animation:fadeUp 0.6s cubic-bezier(.22,1,.36,1) both;
+    }
+    .header-ligne {
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:500;
+      color:var(--text2);
+      display:flex; align-items:center; gap:10px;
+      letter-spacing:-.05px;
+    }
+    .header-sep { color:var(--gold-deep); font-weight:700; }
+    .header-nom {
+      font-family:'Sora', sans-serif;
+      font-weight:700; color:var(--navy);
+      letter-spacing:-.2px;
+    }
+
+    .header-dys-badge {
+      display:none;
+      position:absolute; right:20px;
+      align-items:center; gap:6px;
+      padding:5px 12px; border-radius:999px;
+      background:var(--gold-pale);
+      border:1px solid var(--gold-soft);
+      font-family:'Inter Tight', sans-serif;
+      font-size:10.5px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:0.04em;
+    }
+    .header-dys-badge.visible { display:inline-flex; }
+    .header-dys-badge::before {
+      content:'';
+      width:6px; height:6px;
+      border-radius:50%;
+      background:var(--gold);
+    }
+
+    .header-audio-toggle {
+      position:absolute; left:20px;
+      width:36px; height:36px;
+      border-radius:50%;
+      border:1.5px solid var(--border);
+      background:rgba(255,255,255,.7);
+      font-size:16px;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .2s;
+      padding:0;
+      line-height:1;
+    }
+    .header-audio-toggle:hover {
+      background:var(--gold-pale);
+      border-color:var(--gold);
+      transform:scale(1.05);
+    }
+    .header-audio-toggle.active {
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      border-color:var(--gold-deep);
+      color:#fff;
+      box-shadow:0 4px 12px rgba(194,138,66,.30);
+    }
+    .header-audio-toggle.active.speaking {
+      animation:pulse 1.2s ease-in-out infinite;
+    }
+
+    .audio-toggle-card {
+      margin-top:8px;
+      padding:10px 22px 10px 16px;
+      border-radius:999px;
+      border:1.5px solid var(--gold-soft);
+      background:var(--gold-pale);
+      font-family:'Inter Tight', sans-serif;
+      font-size:13px; font-weight:600;
+      color:var(--gold-deep);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      letter-spacing:-.05px;
+      transition:all .2s;
+    }
+    .audio-toggle-card .ico {
+      font-size:16px;
+      width:24px; height:24px;
+      display:inline-flex;
+      align-items:center; justify-content:center;
+      border-radius:50%;
+      background:rgba(255,255,255,.8);
+    }
+    .audio-toggle-card:hover {
+      background:var(--gold-soft);
+      border-color:var(--gold);
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(194,138,66,.20);
+    }
+    .audio-toggle-card.active {
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      border-color:var(--gold-deep);
+      color:#fff;
+      box-shadow:0 4px 14px rgba(194,138,66,.30);
+    }
+    .audio-toggle-card.active .ico {
+      background:rgba(255,255,255,.25);
+    }
+    .audio-toggle-card.active.speaking {
+      animation:pulse 1.2s ease-in-out infinite;
+    }
+    body.dys .audio-toggle-card { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* ══ ÉCRANS ════════════════════════════════════════════════ */
+    .ecran {
+      display:flex; align-items:center; justify-content:center;
+      width:100%; min-height:100vh;
+      padding-top:80px; padding-bottom:40px;
+    }
+    .ecran.cache { display:none; }
+    .fond-vert {
+      background:linear-gradient(135deg, #E8F5EE 0%, #F4F2EE 50%, #FAF8F4 100%);
+      background-size:200% 200%;
+      animation:gradientWave 18s ease infinite;
+    }
+    .fond-chaud {
+      background:linear-gradient(135deg, var(--cream) 0%, var(--beige) 50%, var(--cream-l) 100%);
+      background-size:200% 200%;
+      animation:gradientWave 22s ease infinite;
+    }
+
+    /* ══ CARTES ════════════════════════════════════════════════ */
+    .carte {
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      border-radius:var(--rxl);
+      padding:44px 38px;
+      max-width:520px; width:90%;
+      box-shadow:0 14px 48px rgba(0,0,0,.06);
+      display:flex; flex-direction:column;
+      align-items:center; gap:18px;
+      text-align:center;
+    }
+    .anime { animation:fadeUp 0.7s cubic-bezier(.22,1,.36,1) both; }
+
+    .badge {
+      display:inline-flex;
+      padding:6px 14px;
+      border-radius:999px;
+      background:var(--gold-pale);
+      border:1px solid var(--gold-soft);
+      font-family:'Inter Tight', sans-serif;
+      font-size:11px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .titre {
+      font-family:'Fraunces', serif;
+      font-style:italic;
+      font-size:clamp(28px, 4.5vw, 38px);
+      font-weight:500;
+      color:var(--navy);
+      line-height:1.1;
+      letter-spacing:-.5px;
+    }
+    .accent {
+      color:var(--gold-deep);
+      font-weight:600;
+    }
+    .texte-intro {
+      font-family:'Inter Tight', sans-serif;
+      font-size:15px; font-weight:500;
+      color:var(--text2);
+      line-height:1.6;
+      letter-spacing:-.05px;
+    }
+    .texte-intro small {
+      display:inline-block;
+      margin-top:6px;
+      font-size:12.5px;
+      color:var(--gold-deep);
+      font-weight:600;
+    }
+
+    .btn {
+      font-family:'Inter Tight', sans-serif;
+      padding:14px 36px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:14px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      animation:btnGlow 2.2s ease-in-out infinite;
+      transition:transform .15s, box-shadow .2s;
+    }
+    .btn:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(194,138,66,.35);
+    }
+
+    /* ══ ÉCRAN COURS ═══════════════════════════════════════════ */
+    .cours-carte {
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      border-radius:var(--rxl);
+      padding:36px 30px;
+      max-width:760px; width:92%;
+      box-shadow:0 14px 48px rgba(0,0,0,.06);
+      display:flex; flex-direction:column;
+      align-items:center; gap:24px;
+      animation:fadeUp 0.7s cubic-bezier(.22,1,.36,1) both;
+    }
+    .cours-prog-header {
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .cours-prog-badge {
+      padding:6px 14px;
+      border-radius:999px;
+      background:var(--gold-pale);
+      border:1px solid var(--gold-soft);
+      font-family:'Inter Tight', sans-serif;
+      font-size:11px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+    .cours-prog-num {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px; font-weight:600;
+      color:var(--text3);
+      letter-spacing:-.05px;
+    }
+    .cours-prog-track {
+      width:100%; height:5px;
+      background:rgba(20,19,16,.05);
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:8px;
+    }
+    .cours-prog-fill {
+      height:100%;
+      background:linear-gradient(90deg, var(--gold-l), var(--gold-deep));
+      border-radius:999px;
+      transition:width 0.5s cubic-bezier(.22,1,.36,1);
+      width:0%;
+    }
+
+    .regle-bloc {
+      width:100%;
+      background:var(--gold-bg);
+      border:1px solid var(--gold-soft);
+      border-radius:var(--rl);
+      padding:24px 22px;
+      margin-bottom:12px;
+    }
+    .regle-label {
+      font-family:'Inter Tight', sans-serif;
+      font-size:10.5px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+    .regle-texte {
+      font-family:'Inter Tight', sans-serif;
+      font-size:14.5px; font-weight:500;
+      color:var(--text);
+      line-height:1.7;
+      letter-spacing:-.05px;
+    }
+    .demarrer-wrap {
+      width:100%;
+      display:flex;
+      justify-content:center;
+      padding:20px 0;
+    }
+    .btn-demarrer {
+      font-family:'Inter Tight', sans-serif;
+      padding:12px 28px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      transition:transform .15s, box-shadow .2s;
+      box-shadow:0 4px 14px rgba(194,138,66,.25);
+    }
+    .btn-demarrer:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(194,138,66,.35);
+    }
+
+    /* ══ Effet typewriter ══════════════════════════════════════ */
+    .para-tw { min-height:0; position:relative; }
+    .para-tw:empty { display:none; }
+    @keyframes blinkCursor {
+      0%, 49% { opacity:1; }
+      50%, 100% { opacity:0; }
+    }
+    .tw-cursor {
+      display:inline-block;
+      width:2px; height:1em;
+      background:var(--gold-deep);
+      vertical-align:text-bottom;
+      margin-left:2px;
+      animation:blinkCursor 0.85s steps(1) infinite;
+      transform:translateY(2px);
+    }
+
+    @keyframes fadeInSuivant {
+      from { opacity:0; transform:translateY(6px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .suivant-wrap {
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:18px;
+      animation:fadeInSuivant 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .btn-suivant {
+      font-family:'Inter Tight', sans-serif;
+      padding:8px 22px;
+      border-radius:999px;
+      border:1.5px solid var(--gold);
+      background:transparent;
+      font-size:12.5px; font-weight:700;
+      color:var(--gold-deep);
+      cursor:pointer;
+      letter-spacing:.02em;
+      transition:all .2s;
+    }
+    .btn-suivant:hover {
+      background:var(--gold);
+      color:#fff;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(194,138,66,.25);
+    }
+
+    /* ══ ANIMATION ÉTAPES ══════════════════════════════════════ */
+    .anim-section {
+      width:100%;
+      background:var(--gold-bg);
+      border:1px solid var(--gold-soft);
+      border-radius:var(--rl);
+      padding:24px 20px;
+      display:flex; flex-direction:column;
+      align-items:center; gap:20px;
+    }
+    .anim-section-label {
+      font-family:'Inter Tight', sans-serif;
+      font-size:10px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      align-self:flex-start;
+    }
+
+    /* ══ EXPRESSION (chiffres + opérateurs) ═══════════════════ */
+    .expr-token {
+      font-family:'Sora', sans-serif;
+      font-size:42px; font-weight:700;
+      color:var(--navy);
+      line-height:1;
+      padding:5px 10px;
+      border-radius:10px;
+      letter-spacing:-.5px;
+      transition:all 0.4s cubic-bezier(.22,1,.36,1);
+      display:inline-block;
+    }
+    .expr-op {
+      font-family:'Sora', sans-serif;
+      font-size:36px; font-weight:700;
+      color:var(--gold-deep);
+      line-height:1;
+      padding:5px 6px;
+      border-radius:10px;
+      transition:all 0.4s cubic-bezier(.22,1,.36,1);
+      display:inline-block;
+    }
+    .hl-or { background:rgba(212,164,100,.30) !important; color:var(--gold-deep) !important; transform:scale(1.08); }
+    .hl-vert { background:rgba(21,163,98,.15) !important; color:var(--green-dark) !important; }
+
+    .etape-bulle {
+      width:100%;
+      background:rgba(255,255,255,.85);
+      border-radius:var(--rl);
+      padding:14px 18px;
+      animation:slideUp 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .etape-texte {
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:500;
+      color:var(--text);
+      line-height:1.6;
+      letter-spacing:-.05px;
+      text-align:center;
+    }
+    .etape-texte .acc {
+      font-weight:700;
+      color:var(--gold-deep);
+    }
+    .etape-texte .vrt {
+      font-weight:700;
+      color:var(--green-dark);
+    }
+    .btn-etape {
+      font-family:'Inter Tight', sans-serif;
+      padding:10px 26px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      transition:all .2s;
+      box-shadow:0 4px 12px rgba(194,138,66,.22);
+    }
+    .btn-etape:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(194,138,66,.32);
+    }
+    .btn-etape.recommencer {
+      background:rgba(255,255,255,.85);
+      color:var(--gold-deep);
+      border:1.5px solid var(--gold);
+      box-shadow:none;
+    }
+
+    .btn-compris-wrap {
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:24px;
+    }
+    .btn-compris {
+      font-family:'Inter Tight', sans-serif;
+      padding:14px 32px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      animation:btnGlow 2.2s ease-in-out infinite;
+      transition:transform .15s, box-shadow .2s;
+    }
+    .btn-compris:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(194,138,66,.35);
+    }
+
+    /* ══ EXERCICE ══════════════════════════════════════════════ */
+    .ex-input {
+      width:130px;
+      padding:10px 8px;
+      border:2px solid var(--border);
+      border-radius:10px;
+      font-family:'Sora', sans-serif;
+      font-size:30px; font-weight:700;
+      color:var(--navy);
+      text-align:center;
+      background:rgba(255,255,255,.85);
+      transition:all .2s;
+      letter-spacing:-.5px;
+    }
+    .ex-input:focus {
+      outline:none;
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px var(--gold-pale);
+    }
+    .ex-input:disabled {
+      cursor:not-allowed;
+    }
+
+    .ex-bulle-box {
+      width:100%;
+      background:rgba(255,255,255,.85);
+      border-radius:var(--rl);
+      padding:14px 18px;
+      animation:slideUp 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .ex-bulle-txt {
+      font-family:'Inter Tight', sans-serif;
+      font-size:14px; font-weight:500;
+      color:var(--text);
+      line-height:1.6;
+      letter-spacing:-.05px;
+      text-align:center;
+    }
+    .ex-fb {
+      width:100%;
+      padding:10px 16px;
+      border-radius:10px;
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:600;
+      text-align:center;
+      opacity:0;
+      transition:opacity 0.3s;
+      letter-spacing:-.05px;
+      min-height:0;
+    }
+    .btn-ex {
+      font-family:'Inter Tight', sans-serif;
+      padding:12px 30px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      transition:all .2s;
+      box-shadow:0 4px 12px rgba(194,138,66,.22);
+    }
+    .btn-ex:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(194,138,66,.32);
+    }
+
+    /* ══ QUIZ ══════════════════════════════════════════════════ */
+    .prog-wrap {
+      width:100%;
+      display:flex; flex-direction:column;
+      gap:8px;
+    }
+    .prog-label {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11.5px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .prog-track {
+      width:100%; height:6px;
+      background:rgba(20,19,16,.06);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .prog-fill {
+      height:100%;
+      background:linear-gradient(90deg, var(--gold-l), var(--gold-deep));
+      border-radius:999px;
+      transition:width 0.5s cubic-bezier(.22,1,.36,1);
+      width:0%;
+    }
+    .quiz-carte {
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      border-radius:var(--rxl);
+      padding:36px 30px;
+      max-width:640px; width:92%;
+      box-shadow:0 14px 48px rgba(0,0,0,.06);
+      display:flex; flex-direction:column;
+      align-items:center; gap:22px;
+      animation:fadeUp 0.7s cubic-bezier(.22,1,.36,1) both;
+    }
+    .consigne-f {
+      font-family:'Inter Tight', sans-serif;
+      font-size:15px; font-weight:600;
+      color:var(--text);
+      text-align:center;
+      letter-spacing:-.05px;
+    }
+    .quiz-input {
+      width:160px;
+      padding:12px 8px;
+      border:2px solid var(--border);
+      border-radius:10px;
+      font-family:'Sora', sans-serif;
+      font-size:32px; font-weight:700;
+      color:var(--navy);
+      text-align:center;
+      background:rgba(255,255,255,.85);
+      transition:all .2s;
+      letter-spacing:-.5px;
+    }
+    .quiz-input:focus {
+      outline:none;
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px var(--gold-pale);
+    }
+    .quiz-btn-val {
+      font-family:'Inter Tight', sans-serif;
+      padding:12px 32px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      box-shadow:0 4px 12px rgba(194,138,66,.22);
+      transition:all .2s;
+    }
+    .quiz-btn-val:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(194,138,66,.32);
+    }
+    .feedback {
+      min-height:0;
+      padding:0;
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:600;
+      text-align:center;
+      opacity:0;
+      transition:opacity 0.3s;
+    }
+    .feedback.show {
+      opacity:1;
+      padding:10px 16px;
+    }
+
+    /* Expression dans quiz */
+    .quiz-expr {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      font-family:'Sora', sans-serif;
+      font-size:38px; font-weight:700;
+      color:var(--navy);
+      letter-spacing:-.5px;
+    }
+    .quiz-expr .op {
+      color:var(--gold-deep);
+    }
+
+    /* Expression dans exercice (zone-exo) */
+    .exo-expr {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      font-family:'Sora', sans-serif;
+      font-size:44px; font-weight:700;
+      color:var(--navy);
+      letter-spacing:-.5px;
+    }
+    .exo-expr .op {
+      color:var(--gold-deep);
+    }
+    .exo-expr .tok {
+      padding:4px 8px;
+      border-radius:8px;
+      transition:all 0.4s cubic-bezier(.22,1,.36,1);
+    }
+    .exo-expr .virgule-anim {
+      display:inline-block;
+      transition:all 0.5s cubic-bezier(.22,1,.36,1);
+    }
+    .exo-expr .virgule-bounce {
+      animation:virguleBounce 0.7s ease;
+    }
+
+    /* ══ LAYOUT 2 COLONNES (règle + animation côte à côte) ════ */
+    .cours-carte-wide {
+      max-width:920px !important;
+      width:94% !important;
+    }
+    .deux-colonnes {
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      width:100%;
+      align-items:stretch;
+    }
+    .deux-colonnes > .regle-bloc,
+    .deux-colonnes > .anim-section {
+      width:100%;
+      margin-bottom:0 !important;
+      min-width:0;
+    }
+
+    /* ══ TABLEAU DES RÈGLES DE DÉCALAGE ════════════════════════ */
+    .regles-decalage {
+      width:100%;
+      margin:18px auto 6px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      animation:fadeIn 0.5s cubic-bezier(.22,1,.36,1) both;
+    }
+    .regles-section-titre {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11px; font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-align:center;
+      margin-top:6px;
+      margin-bottom:2px;
+    }
+    .regles-section-titre.droite { color:var(--green-dark); }
+    .regles-section-titre.gauche { color:var(--red-dark); }
+    .regle-ligne {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:9px 14px;
+      border-radius:10px;
+      background:rgba(255,255,255,.85);
+      border:1.5px solid var(--border);
+      font-family:'Sora', sans-serif;
+      font-size:18px;
+      font-weight:700;
+      color:var(--navy);
+      transition:all 0.3s ease;
+    }
+    .regle-ligne .op-symb {
+      color:var(--gold-deep);
+      font-weight:700;
+      font-size:18px;
+      min-width:42px;
+      text-align:center;
+    }
+    .regle-ligne .arrow-r {
+      color:var(--green-dark);
+      font-size:20px;
+      font-weight:700;
+    }
+    .regle-ligne .arrow-l {
+      color:var(--red-dark);
+      font-size:20px;
+      font-weight:700;
+    }
+    .regle-ligne .crans-txt {
+      font-family:'Inter Tight', sans-serif;
+      font-size:13px;
+      font-weight:600;
+      color:var(--text2);
+      letter-spacing:-.05px;
+    }
+    .regle-ligne.regle-active {
+      transform:scale(1.04);
+      box-shadow:0 0 0 3px var(--gold-deep), 0 6px 20px rgba(194,138,66,.35);
+      position:relative;
+      z-index:2;
+    }
+    /* Surlignage d'une ligne de consigne quand l'exemple de droite la pointe */
+    .consigne-ligne.regle-active {
+      background:var(--gold-bg);
+      box-shadow:0 0 0 2px var(--gold-soft), 0 6px 18px rgba(194,138,66,.18);
+      transform:scale(1.03);
+      position:relative;
+      z-index:2;
+    }
+    .consigne-ligne.regle-active .consigne-nombre {
+      color:var(--gold-deep);
+    }
+    .regles-legende {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px;
+      color:var(--text2);
+      text-align:center;
+      margin-top:8px;
+      font-style:italic;
+    }
+
+    /* ══ BOUTONS SENS ← / → ══════════════════════════════════════ */
+    .btn-sens {
+      width:170px; min-height:96px;
+      padding:12px 10px;
+      border-radius:18px;
+      border:3px solid var(--gold-deep);
+      background:rgba(255,255,255,.85);
+      cursor:pointer;
+      transition:all 0.2s;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:4px;
+      line-height:1.15;
+      box-shadow:0 4px 12px rgba(194,138,66,.18);
+      color:var(--gold-deep);
+      font-family:'Sora', sans-serif;
+    }
+    .btn-sens .ico {
+      font-size:36px;
+      font-weight:700;
+      line-height:1;
+    }
+    .btn-sens .lbl {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11.5px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      margin-top:2px;
+      text-align:center;
+    }
+    .btn-sens:hover {
+      background:var(--gold-pale);
+      transform:translateY(-2px);
+      box-shadow:0 8px 22px rgba(194,138,66,.30);
+    }
+    .btn-sens:active {
+      transform:translateY(0);
+    }
+    .btn-sens.correct {
+      background:linear-gradient(180deg, rgba(21,163,98,.20), rgba(14,115,72,.30));
+      border-color:var(--green-dark);
+      color:var(--green-dark);
+      pointer-events:none;
+    }
+    .btn-sens.wrong-flash {
+      animation:wrongShake 0.4s ease;
+      background:rgba(212,38,38,.18);
+      border-color:var(--red-dark);
+      color:var(--red-dark);
+    }
+    @keyframes wrongShake {
+      0%,100% { transform:translateX(0); background:rgba(212,38,38,.18); }
+      25% { transform:translateX(-4px); }
+      75% { transform:translateX(4px); }
+    }
+
+    /* ══ ÉCRAN "À RETENIR" — habillage dédié ═══════════════════ */
+    /* Titre de fiche en haut de la carte cours */
+    .cours-titre-fiche {
+      width:100%;
+      text-align:center;
+      margin-bottom:6px;
+    }
+    .cours-titre-fiche h1 {
+      font-family:'Fraunces', serif;
+      font-style:italic;
+      font-weight:500;
+      font-size:clamp(22px, 3vw, 30px);
+      color:var(--navy);
+      line-height:1.15;
+      letter-spacing:-.5px;
+    }
+    .cours-titre-fiche h1 .accent {
+      color:var(--gold-deep);
+      font-weight:600;
+    }
+    .cours-titre-fiche .sous {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px;
+      font-weight:600;
+      color:var(--text3);
+      margin-top:4px;
+      letter-spacing:-.05px;
+    }
+    body.dys .cours-titre-fiche h1,
+    body.dys .cours-titre-fiche .sous { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* Intro de la partie 1 */
+    .consigne-intro {
+      font-family:'Inter Tight', sans-serif;
+      font-size:14px;
+      font-weight:600;
+      color:var(--text);
+      text-align:center;
+      margin-bottom:14px;
+      line-height:1.5;
+      letter-spacing:-.05px;
+    }
+    .consigne-intro .num-pastille {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px; height:22px;
+      border-radius:50%;
+      background:var(--gold-deep);
+      color:#fff;
+      font-family:'Sora', sans-serif;
+      font-size:12px;
+      font-weight:800;
+      margin-right:4px;
+      vertical-align:-2px;
+    }
+    .consigne-intro .nb-repere {
+      font-family:'Sora', sans-serif;
+      font-weight:700;
+      color:var(--navy);
+      background:rgba(26,44,79,.07);
+      border-radius:6px;
+      padding:1px 7px;
+    }
+    body.dys .consigne-intro { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* Lignes de consigne (dixième / centième / millième) — disposées en ligne */
+    .consigne-liste {
+      display:flex;
+      flex-direction:row;
+      gap:0;
+      width:100%;
+      justify-content:center;
+      align-items:stretch;
+    }
+    .consigne-ligne {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      gap:8px;
+      flex:1 1 0;
+      padding:14px 10px;
+      border-radius:14px;
+      /* État initial : caché, pour l'apparition progressive */
+      opacity:0;
+      transform:translateY(12px);
+      transition:opacity .45s cubic-bezier(.22,1,.36,1), transform .35s cubic-bezier(.22,1,.36,1), background-color .3s ease, box-shadow .3s ease;
+    }
+    .consigne-ligne.visible {
+      opacity:1;
+      transform:translateY(0);
+    }
+    /* Trait de séparation vertical entre les colonnes */
+    .consigne-ligne + .consigne-ligne {
+      border-left:1px solid var(--border);
+    }
+    .consigne-badge {
+      font-family:'Inter Tight', sans-serif;
+      font-size:10px;
+      font-weight:800;
+      color:#fff;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      border-radius:999px;
+      padding:5px 12px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      box-shadow:0 3px 10px rgba(194,138,66,.28);
+    }
+    body.dys .consigne-badge { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+    .consigne-nombre {
+      font-family:'Sora', sans-serif;
+      font-size:30px;
+      font-weight:800;
+      letter-spacing:-1px;
+      line-height:1;
+      color:var(--navy);
+    }
+    /* Fraction empilée : numérateur au-dessus, barre horizontale, dénominateur en dessous */
+    .frac {
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      vertical-align:middle;
+      line-height:1;
+      font-family:'Sora', sans-serif;
+      font-weight:800;
+    }
+    .frac > .num {
+      display:block;
+      padding:0 4px 2px;
+      font-size:0.66em;
+    }
+    .frac > .den {
+      display:block;
+      padding:2px 4px 0;
+      font-size:0.66em;
+      border-top:2.5px solid currentColor;
+    }
+    .consigne-explik {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11.5px;
+      font-weight:600;
+      color:var(--text2);
+      letter-spacing:-.05px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      text-align:center;
+      line-height:1.3;
+    }
+    /* En grand écran, "après la virgule" passe à la ligne */
+    .consigne-explik .explik-coupe {
+      display:block;
+      width:100%;
+      height:0;
+      font-size:0;
+    }
+    .consigne-explik .puce-nb {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px; height:22px;
+      border-radius:50%;
+      background:var(--gold-pale);
+      border:1.5px solid var(--gold-soft);
+      color:var(--gold-deep);
+      font-family:'Sora', sans-serif;
+      font-size:12px;
+      font-weight:800;
+    }
+    body.dys .consigne-explik { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* Sur écran étroit : les 3 consignes repassent en colonne */
+    @media (max-width: 620px) {
+      .consigne-liste {
+        flex-direction:column;
+      }
+      .consigne-ligne {
+        padding:16px 14px;
+      }
+      /* Trait de séparation : horizontal au lieu de vertical */
+      .consigne-ligne + .consigne-ligne {
+        border-left:none;
+        border-top:1px solid var(--border);
+      }
+      .consigne-explik {
+        flex-direction:row;
+        gap:7px;
+      }
+      .consigne-explik .explik-coupe {
+        display:inline;
+        width:auto;
+        height:auto;
+        font-size:inherit;
+      }
+    }
+
+    /* Légende sous la liste */
+    .consigne-legende {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px;
+      font-weight:500;
+      color:var(--text2);
+      text-align:center;
+      margin-top:12px;
+      font-style:italic;
+    }
+    .consigne-legende .ex-garde {
+      background:rgba(212,164,100,.30);
+      border-radius:5px;
+      padding:1px 6px;
+      color:var(--navy);
+      font-weight:700;
+      font-style:normal;
+    }
+    body.dys .consigne-legende { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-ligne">
+      <span id="header-lycee">—</span><span class="header-sep">·</span>
+      <span id="header-classe">—</span><span class="header-sep">·</span>
+      <span class="header-nom" id="header-nom">—</span>
+    </div>
+    <button class="header-audio-toggle" id="header-audio-toggle" onclick="toggleAudioMode()" title="Activer la lecture audio" aria-label="Activer la lecture audio">🔇</button>
+    <div class="header-dys-badge" id="header-dys-badge">Mode DYS</div>
+  </div>
+
+  <!-- CHARGEMENT -->
+  <div class="ecran fond-vert" id="ecran-chargement">
+    <div class="carte anime">
+      <div class="badge">Fiche remédiation</div>
+      <div class="titre">Chargement<br><span class="accent">en cours…</span></div>
+    </div>
+  </div>
+
+  <!-- ACCUEIL -->
+  <div class="ecran fond-vert cache" id="ecran-accueil">
+    <div class="carte anime">
+      <div class="badge">Fiche remédiation</div>
+      <div class="titre">Lire et écrire<br><span class="accent">les grands nombres</span></div>
+      <button class="audio-toggle-card" id="audio-toggle-card" onclick="toggleAudioMode()" aria-label="Activer la lecture audio">
+        <span class="ico">🔇</span>
+        <span class="lbl">Activer la lecture audio</span>
+      </button>
+      <button class="btn" onclick="allerVers('ecran-accueil','ecran-retenir')">Commencer</button>
+    </div>
+  </div>
+
+  <!-- À RETENIR -->
+  <div class="ecran fond-chaud cache" id="ecran-retenir">
+    <div class="cours-carte cours-carte-wide">
+      <div class="cours-titre-fiche">
+        <h1>Lire et écrire les <span class="accent">grands nombres</span></h1>
+        <div class="sous">du million au milliard, sans confusion</div>
+      </div>
+      <div class="cours-prog-header">
+        <div class="cours-prog-badge">À retenir</div>
+        <div class="cours-prog-num">On regroupe les chiffres par tranches de 3</div>
+      </div>
+
+      <div class="deux-colonnes">
+        <!-- Colonne 1 : La règle -->
+        <div class="regle-bloc">
+          <div class="regle-label">La règle</div>
+          <div class="regle-texte">
+            <div class="demarrer-wrap" id="demarrer-wrap">
+              <button class="btn-demarrer" onclick="demarrerLecture()">Comprendre la règle ✨</button>
+            </div>
+            <div class="para-tw" id="para-1"></div>
+            <!-- Bloc cours : les 3 grandes tranches mille / million / milliard -->
+            <div id="tab-decalage-wrap" style="display:none;opacity:0;transition:opacity 0.5s ease;margin-top:18px;">
+              <div class="consigne-intro">
+                <span class="num-pastille">1</span> Pour lire un grand nombre, on regroupe les chiffres par <strong style="color:var(--gold-deep);">tranches de 3</strong>, en partant de la droite. Chaque tranche a un <strong style="color:var(--gold-deep);">nom</strong>.
+              </div>
+              <!-- Les 3 grandes tranches -->
+              <div class="consigne-liste">
+                <div class="consigne-ligne" id="regle-dixieme">
+                  <span class="consigne-badge">Mille</span>
+                  <span class="consigne-nombre"><strong>1 000</strong></span>
+                  <span class="consigne-explik">3 zéros<span class="explik-coupe"> </span>· tranche n°&nbsp;2</span>
+                </div>
+                <div class="consigne-ligne" id="regle-centieme">
+                  <span class="consigne-badge">Million</span>
+                  <span class="consigne-nombre"><strong>1 000 000</strong></span>
+                  <span class="consigne-explik">6 zéros<span class="explik-coupe"> </span>· tranche n°&nbsp;3</span>
+                </div>
+                <div class="consigne-ligne" id="regle-millieme">
+                  <span class="consigne-badge">Milliard</span>
+                  <span class="consigne-nombre"><strong>1 000 000 000</strong></span>
+                  <span class="consigne-explik">9 zéros<span class="explik-coupe"> </span>· tranche n°&nbsp;4</span>
+                </div>
+              </div>
+              <div class="consigne-legende">Astuce : <strong style="color:var(--navy);font-style:normal;">1 milliard = 1 000 millions</strong>. Ne confonds jamais les deux : la dette en milliards d'euros n'est pas la même chose que la dette en millions !</div>
+            </div>
+            <div class="suivant-wrap" id="suivant-wrap" style="display:none;">
+              <button class="btn-suivant" onclick="suivantPara()">Suivant →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colonne 2 : L'exemple animé -->
+        <div class="anim-section" id="anim-section" style="display:none;opacity:0;transition:opacity 0.6s ease;">
+          <div class="anim-section-label" id="anim-label">Comment lire un grand nombre ?</div>
+
+          <!-- Expression à animer (dynamique selon l'exemple) -->
+          <div class="exo-expr" id="anim-expr">
+            <span class="tok" id="a-t1">3 245 700</span>
+            <span class="op" id="a-op1" style="display:none;"></span>
+            <span class="tok" id="a-t2" style="display:none;"></span>
+            <span class="tok" id="a-eq-res" style="display:none;"></span>
+          </div>
+
+          <div class="etape-bulle" id="etape-bulle">
+            <div class="etape-texte" id="etape-texte">Appuie sur <strong style="color:var(--gold-deep);">Étape suivante</strong> pour commencer l'exemple.</div>
+          </div>
+          <button class="btn-etape" id="btn-etape" onclick="etapeSuivante()">Étape suivante →</button>
+
+          <div class="btn-compris-wrap" id="btn-compris-wrap" style="display:none;opacity:0;transition:opacity 0.6s ease;margin-top:6px;">
+            <button class="btn-compris" onclick="allerVers('ecran-retenir','ecran-cours');setTimeout(()=>chargerEx(0),500)">Compris, on s'entraîne !</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXERCICES -->
+  <div class="ecran fond-chaud cache" id="ecran-cours">
+    <div class="cours-carte">
+      <div style="width:100%;margin-bottom:24px;">
+        <div class="cours-prog-header">
+          <div class="cours-prog-badge" id="cours-badge">Exercice 1 / 6</div>
+          <div class="cours-prog-num">Passer d'une écriture à l'autre</div>
+        </div>
+        <div class="cours-prog-track"><div class="cours-prog-fill" id="cours-fill"></div></div>
+      </div>
+
+      <div id="zone-exo" style="width:100%;background:rgba(194,138,66,0.06);border:1px solid rgba(212,130,10,0.18);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;">
+
+        <!-- Bandeau type de série -->
+        <div id="ex-serie-label" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:var(--gold-deep);letter-spacing:.14em;text-transform:uppercase;text-align:center;"></div>
+
+        <!-- Expression affichée -->
+        <div class="exo-expr" id="ex-expr"></div>
+
+        <!-- Consigne de la question -->
+        <div id="ex-consigne" style="font-family:'Inter Tight',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);text-align:center;letter-spacing:-.05px;"></div>
+
+        <!-- Zone des 2 boutons de choix (labels dynamiques) -->
+        <div id="ex-zone-choix" style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+          <div style="display:flex;gap:16px;justify-content:center;">
+            <button class="btn-sens" id="btn-choix-a" onclick="exClicChoix('a')">
+              <div class="ico" id="btn-choix-a-ico">×</div>
+              <div class="lbl" id="btn-choix-a-lbl">multiplication</div>
+            </button>
+            <button class="btn-sens" id="btn-choix-b" onclick="exClicChoix('b')">
+              <div class="ico" id="btn-choix-b-ico">÷</div>
+              <div class="lbl" id="btn-choix-b-lbl">division</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="ex-bulle-box" id="ex-bulle">
+          <div class="ex-bulle-txt" id="ex-bulle-txt">Regarde bien le <strong style="color:var(--gold-deep);">deuxième nombre</strong> de l'opération.</div>
+        </div>
+        <div class="ex-fb" id="ex-fb"></div>
+        <button class="btn-ex" id="ex-btn" style="display:none;">Valider →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSITION QUIZ -->
+  <div class="ecran fond-vert cache" id="ecran-transition-final">
+    <div class="carte anime">
+      <div class="badge">Vérification finale</div>
+      <div class="titre">Maintenant<br>prouve que tu maîtrises<br><span class="accent">les grands nombres !</span></div>
+      <div class="texte-intro">Tu vas voir 8 questions.<br>Lire, écrire, donner du sens aux ordres de grandeur 💪</div>
+      <button class="btn" onclick="versQuizFinal()">C'est parti !</button>
+    </div>
+  </div>
+
+  <!-- QUIZ FINAL -->
+  <div class="ecran fond-vert cache" id="ecran-quiz-final">
+    <div class="quiz-carte">
+      <div class="prog-wrap">
+        <div class="prog-label" id="prog-label-f">Question 1 / 8</div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill-f"></div></div>
+      </div>
+      <div class="consigne-f" id="quiz-consigne-f">Choisis la bonne réponse :</div>
+      <div id="quiz-expr-zone" class="quiz-expr" style="margin:6px 0;"></div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-sens" id="qf-btn-a" onclick="repondreFinal('a')">
+          <div class="ico" id="qf-btn-a-ico">A</div>
+          <div class="lbl" id="qf-btn-a-lbl">réponse A</div>
+        </button>
+        <button class="btn-sens" id="qf-btn-b" onclick="repondreFinal('b')">
+          <div class="ico" id="qf-btn-b-ico">B</div>
+          <div class="lbl" id="qf-btn-b-lbl">réponse B</div>
+        </button>
+      </div>
+      <div class="feedback" id="feedback-f"></div>
+    </div>
+  </div>
+
+  <!-- RÉUSSI -->
+  <div class="ecran fond-vert cache" id="ecran-final-ok">
+    <div class="carte anime">
+      <div class="badge" style="background:var(--green-l);color:var(--green-dark);border-color:rgba(21,163,98,.25);">Notion maîtrisée ✓</div>
+      <div class="titre">Bravo <span class="accent" id="prenom-ok"></span> ! 🎉</div>
+      <div class="texte-intro" id="texte-ok"></div>
+    </div>
+  </div>
+
+  <!-- À REVOIR -->
+  <div class="ecran fond-vert cache" id="ecran-final-revoir">
+    <div class="carte anime">
+      <div class="badge" style="background:var(--red-l);color:var(--red-dark);border-color:rgba(212,38,38,.15);">À revoir</div>
+      <div class="titre">Pas encore <span class="accent" id="prenom-revoir"></span>…</div>
+      <div class="texte-intro" id="texte-revoir"></div>
+      <button class="btn" onclick="allerVers('ecran-final-revoir','ecran-retenir');reinitAnim()">Revoir le cours</button>
+    </div>
+  </div>
+
+  <!-- BLOQUÉ -->
+  <div class="ecran fond-vert cache" id="ecran-bloque">
+    <div class="carte anime">
+      <div class="badge" style="background:var(--red-l);color:var(--red-dark);border-color:rgba(212,38,38,.15);">Aide en route 🙋</div>
+      <div class="titre">Ton prof va venir<br>t'aider <span class="accent" id="prenom-bloque"></span></div>
+      <div class="texte-intro">Tu as fait 3 tentatives.<br>Ton enseignant a été alerté et va passer te voir.<br><br>Pas de panique, c'est normal d'avoir besoin d'aide !</div>
+    </div>
+  </div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxlBMjVXIg58lsopoeQ5sEZW-jcQIOrOtnWwCGVtHLGjcmpi9exaYZ3oAEre4deZum2/exec';
+  const FICHE_ID = 'puissances_grands_nombres';
+  const THEME = 'Puissances et notation scientifique'; const NIVEAU = '6ème'; const MAX_TENTATIVES = 3;
+
+  const params = new URLSearchParams(window.location.search);
+  const nom       = params.get('nom')        || 'Élève';
+  const classe    = params.get('classe')     || '—';
+  const lycee     = params.get('lycee')      || '—';
+  const email     = params.get('email')      || '';
+  const prof      = params.get('prof')       || '';
+  const profEmail = params.get('prof_email') || '';
+  const dysActif = params.get('dys') === '1';
+
+  document.getElementById('header-lycee').textContent = lycee;
+  document.getElementById('header-classe').textContent = classe;
+  document.getElementById('header-nom').textContent = nom;
+  ['prenom-ok','prenom-revoir','prenom-bloque'].forEach(id => {
+    document.getElementById(id).textContent = nom.split(' ')[0];
+  });
+
+  if (dysActif) {
+    document.body.classList.add('dys');
+    document.getElementById('header-dys-badge').classList.add('visible');
+  }
+
+  let nbTentatives = 0;
+  const TOK = () => dysActif ? 1500 : 700;
+  const TKO = () => dysActif ? 2000 : 1200;
+
+  function sauvegarder(statut, score, tentNum, extra) {
+    if (!email) return;
+    fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(Object.assign({
+      type:'remediation', eleve_id:email, eleve_nom:nom, classe,
+      etablissement:lycee, fiche_id:FICHE_ID, theme:THEME, niveau:NIVEAU,
+      statut, score_quiz:score, tentative_num:tentNum,
+      prof, prof_email:profEmail, alerte_traitee:'non'
+    }, extra || {})) }).catch(()=>{});
+  }
+
+  async function verifierProgression() {
+    if (!email) { allerVers('ecran-chargement','ecran-accueil'); return; }
+    const timeout = setTimeout(() => allerVers('ecran-chargement','ecran-accueil'), 8000);
+    try {
+      const res = await fetch(APPS_SCRIPT_URL + '?type=remediation&etablissement=' + encodeURIComponent(lycee));
+      const data = await res.json();
+      clearTimeout(timeout);
+      if (data.status !== 'ok') { allerVers('ecran-chargement','ecran-accueil'); return; }
+      const lignes = (data.data||[]).filter(r => r.eleve_id===email && r.fiche_id===FICHE_ID);
+      nbTentatives = lignes.filter(r => ['quiz_final_echec','quiz_final_valide','echec_3_tentatives'].includes(r.statut)).length;
+      if (lignes.find(r => r.statut==='echec_3_tentatives')) { allerVers('ecran-chargement','ecran-bloque'); return; }
+      if (lignes.find(r => r.statut==='quiz_final_valide'))  { allerVers('ecran-chargement','ecran-final-ok'); return; }
+      allerVers('ecran-chargement','ecran-accueil');
+    } catch(e) { clearTimeout(timeout); allerVers('ecran-chargement','ecran-accueil'); }
+  }
+  verifierProgression();
+
+  // ══ MODE AUDIO GLOBAL (Web Speech API) ═══════════════════════
+  let audioMode = false;
+  let voixFr = null;
+
+  function chargerVoix() {
+    const voix = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    voixFr = voix.find(v => v.lang.startsWith('fr') && /natural|neural|premium|google|enhanced/i.test(v.name))
+          || voix.find(v => v.lang === 'fr-FR')
+          || voix.find(v => v.lang.startsWith('fr'))
+          || null;
+  }
+  if (window.speechSynthesis) {
+    chargerVoix();
+    window.speechSynthesis.onvoiceschanged = chargerVoix;
+  }
+
+  function nettoyerPourTTS(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return (tmp.textContent || tmp.innerText || '').trim();
+  }
+
+  function parler(html, options) {
+    options = options || {};
+    if (!window.speechSynthesis) return;
+    if (!audioMode && !options.force) return;
+    window.speechSynthesis.cancel();
+    const texte = nettoyerPourTTS(html);
+    if (!texte) return;
+    const utt = new SpeechSynthesisUtterance(texte);
+    utt.lang = 'fr-FR';
+    utt.rate = 0.92;
+    utt.pitch = 1.0;
+    utt.volume = 1.0;
+    if (voixFr) utt.voice = voixFr;
+    const headerBtn = document.getElementById('header-audio-toggle');
+    const cardBtn = document.getElementById('audio-toggle-card');
+    if (audioMode) {
+      if (headerBtn) headerBtn.classList.add('speaking');
+      if (cardBtn) cardBtn.classList.add('speaking');
+    }
+    utt.onend = () => {
+      if (headerBtn) headerBtn.classList.remove('speaking');
+      if (cardBtn) cardBtn.classList.remove('speaking');
+      if (options.onEnd) options.onEnd();
+    };
+    utt.onerror = () => {
+      if (headerBtn) headerBtn.classList.remove('speaking');
+      if (cardBtn) cardBtn.classList.remove('speaking');
+      if (options.onEnd) options.onEnd();
+    };
+    window.speechSynthesis.speak(utt);
+  }
+
+  function arreterLecture() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    const headerBtn = document.getElementById('header-audio-toggle');
+    const cardBtn = document.getElementById('audio-toggle-card');
+    if (headerBtn) headerBtn.classList.remove('speaking');
+    if (cardBtn) cardBtn.classList.remove('speaking');
+  }
+
+  function toggleAudioMode() {
+    audioMode = !audioMode;
+    const headerBtn = document.getElementById('header-audio-toggle');
+    const cardBtn = document.getElementById('audio-toggle-card');
+    if (audioMode) {
+      if (headerBtn) {
+        headerBtn.classList.add('active');
+        headerBtn.textContent = '🔊';
+        headerBtn.title = 'Désactiver la lecture audio';
+        headerBtn.setAttribute('aria-label', 'Désactiver la lecture audio');
+      }
+      if (cardBtn) {
+        cardBtn.classList.add('active');
+        cardBtn.querySelector('.ico').textContent = '🔊';
+        cardBtn.querySelector('.lbl').textContent = 'Audio activé — clique pour désactiver';
+        cardBtn.setAttribute('aria-label', 'Désactiver la lecture audio');
+      }
+    } else {
+      if (headerBtn) {
+        headerBtn.classList.remove('active', 'speaking');
+        headerBtn.textContent = '🔇';
+        headerBtn.title = 'Activer la lecture audio';
+        headerBtn.setAttribute('aria-label', 'Activer la lecture audio');
+      }
+      if (cardBtn) {
+        cardBtn.classList.remove('active', 'speaking');
+        cardBtn.querySelector('.ico').textContent = '🔇';
+        cardBtn.querySelector('.lbl').textContent = 'Activer la lecture audio';
+        cardBtn.setAttribute('aria-label', 'Activer la lecture audio');
+      }
+      arreterLecture();
+    }
+  }
+
+  // ══ TYPEWRITER POUR L'ÉCRAN "À RETENIR" ══════════════════════
+  const PARAGRAPHES_RETENIR = [
+    'Pour lire un grand nombre, on le découpe en <strong style="color:#C28A42;">tranches de 3 chiffres</strong> à partir de la droite. Chaque tranche a un nom : <strong style="color:#C28A42;">unités</strong>, <strong style="color:#C28A42;">milliers</strong>, <strong style="color:#C28A42;">millions</strong>, <strong style="color:#C28A42;">milliards</strong>. Plus on monte, plus on ajoute 3 zéros.'
+  ];
+
+  let paraIndex = 0;
+  let twTimer = null;
+
+  function demarrerLecture() {
+    const dem = document.getElementById('demarrer-wrap');
+    dem.style.transition = 'opacity 0.3s ease';
+    dem.style.opacity = '0';
+    setTimeout(() => {
+      dem.style.display = 'none';
+      paraIndex = 0;
+      ecrireParagraphe(0);
+    }, 300);
+  }
+
+  function typewriter(elementId, html, charDelay, onDone) {
+    const el = document.getElementById(elementId);
+    el.innerHTML = '';
+    const tokens = [];
+    let i = 0;
+    while (i < html.length) {
+      if (html[i] === '<') {
+        const fin = html.indexOf('>', i);
+        if (fin === -1) { tokens.push(html[i]); i++; continue; }
+        tokens.push(html.substring(i, fin + 1));
+        i = fin + 1;
+      } else {
+        tokens.push(html[i]);
+        i++;
+      }
+    }
+    el.innerHTML = '<span class="tw-text"></span><span class="tw-cursor"></span>';
+    const txtSpan = el.querySelector('.tw-text');
+    let written = '';
+    let idx = 0;
+
+    function step() {
+      if (idx >= tokens.length) {
+        const cur = el.querySelector('.tw-cursor');
+        if (cur) cur.remove();
+        if (onDone) onDone();
+        return;
+      }
+      const tok = tokens[idx];
+      if (tok.startsWith('<')) {
+        written += tok;
+        idx++;
+        txtSpan.innerHTML = written;
+        step();
+      } else {
+        written += tok;
+        idx++;
+        txtSpan.innerHTML = written;
+        twTimer = setTimeout(step, charDelay);
+      }
+    }
+    step();
+  }
+
+  function ecrireParagraphe(i) {
+    document.getElementById('suivant-wrap').style.display = 'none';
+    const id = 'para-' + (i + 1);
+    parler(PARAGRAPHES_RETENIR[i]);
+    typewriter(id, PARAGRAPHES_RETENIR[i], 35, () => {
+      if (i === 0) {
+        const tab = document.getElementById('tab-decalage-wrap');
+        tab.style.display = 'block';
+        tab.offsetHeight;
+        setTimeout(() => {
+          tab.style.opacity = '1';
+          parler('Pour lire ou écrire un grand nombre, on le regroupe par tranches de 3 chiffres à partir de la droite. Chaque tranche a un nom : mille, million, milliard. Mille c\'est 3 zéros. Un million c\'est 6 zéros. Un milliard c\'est 9 zéros. Un milliard, c\'est mille millions !');
+          // Apparition progressive des 3 lignes de consigne, l'une après l'autre
+          const lignes = ['regle-dixieme', 'regle-centieme', 'regle-millieme'];
+          const delaiEntreLignes = dysActif ? 1100 : 750;
+          lignes.forEach((idLigne, idx) => {
+            setTimeout(() => {
+              const el = document.getElementById(idLigne);
+              if (el) el.classList.add('visible');
+            }, 350 + idx * delaiEntreLignes);
+          });
+          // Le bouton "Suivant" n'apparaît qu'une fois les 3 lignes affichées
+          const apresLignes = 350 + lignes.length * delaiEntreLignes + 300;
+          setTimeout(() => {
+            const wrap = document.getElementById('suivant-wrap');
+            wrap.style.display = 'flex';
+            wrap.style.animation = 'none';
+            wrap.offsetHeight;
+            wrap.style.animation = '';
+          }, apresLignes);
+        }, 50);
+      } else {
+        afficherAnimEtCompris();
+      }
+    });
+  }
+
+  function suivantPara() {
+    arreterLecture();
+    afficherAnimEtCompris();
+  }
+
+  function afficherAnimEtCompris() {
+    // Affiche uniquement la colonne d'animation. Le bouton "Compris" n'apparaîtra
+    // qu'à la toute fin du dernier exemple (voir etapeSuivante).
+    const anim = document.getElementById('anim-section');
+    anim.style.display = 'flex';
+    anim.offsetHeight;
+    setTimeout(() => {
+      anim.style.opacity = '1';
+    }, 50);
+  }
+
+  // ── ANIMATION COURS ─────────────────────────────────────────
+  let etapeActuelle = 0;
+  let exempleAnim = 0;
+
+  function hl(id, cls) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add(cls);
+  }
+  function unhl(id, cls) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove(cls);
+  }
+
+  // Surlignage d'une ligne de règle
+  const ALL_REGLES = ['regle-dixieme','regle-centieme','regle-millieme'];
+  function hlRegle(id) {
+    ALL_REGLES.forEach(rid => {
+      const el = document.getElementById(rid);
+      if (el) el.classList.remove('regle-active');
+    });
+    const el = document.getElementById(id);
+    if (el) el.classList.add('regle-active');
+  }
+  function unhlAllRegles() {
+    ALL_REGLES.forEach(rid => {
+      const el = document.getElementById(rid);
+      if (el) el.classList.remove('regle-active');
+    });
+  }
+
+  const EXEMPLES_ANIM = [
+    {
+      label: 'Lire un grand nombre',
+      tokens: { t1:'3245700', op1:'', t2:'' },
+      etapes: [
+        { texte:"On veut lire le nombre <span class='acc'>3245700</span>. À première vue, c'est difficile.", action:()=>{
+          hlRegle('regle-dixieme');
+        }},
+        { texte:"On commence par <span class='acc'>regrouper par tranches de 3</span>, à partir de la droite.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "3<span style='color:var(--gold-deep);'>&nbsp;</span>245<span style='color:var(--gold-deep);'>&nbsp;</span>700";
+        }},
+        { texte:"Maintenant on lit chaque tranche avec son nom : <span class='acc'>3 millions</span>, <span class='acc'>245 mille</span>, <span class='acc'>700</span>.", action:()=>{
+          hlRegle('regle-centieme');
+        }},
+        { texte:"<span class='acc'>3 245 700 = trois millions deux cent quarante-cinq mille sept cents</span>.", action:()=>{
+          unhlAllRegles();
+          hlRegle('regle-centieme');
+          document.getElementById('a-eq-res').innerHTML = ' = 3 millions...';
+          document.getElementById('a-eq-res').style.display = 'inline';
+          document.getElementById('a-eq-res').style.color = 'var(--green-dark)';
+        }, dernier:true },
+      ]
+    },
+    {
+      label: 'Écrire un nombre avec des zéros',
+      tokens: { t1:'huit millions trente-deux', op1:'', t2:'' },
+      etapes: [
+        { texte:"On veut écrire en chiffres : <span class='acc'>huit millions trente-deux</span>.", action:()=>{
+          hlRegle('regle-centieme');
+        }},
+        { texte:"<span class='acc'>Piège</span> : si on écrit juste 8 32, c'est faux. Il faut placer chaque chiffre dans la bonne tranche.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "8 millions <span style='color:var(--gold-deep);'>?</span> mille <span style='color:var(--gold-deep);'>?</span>";
+        }},
+        { texte:"On a <span class='acc'>8</span> dans la tranche des millions, <span class='acc'>0</span> dans celle des milliers (pas mentionné = zéro !), et <span class='acc'>32</span> dans les unités.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "8 millions <span style='background:rgba(212,164,100,.30);border-radius:4px;padding:0 3px;'>000</span> mille <span style='background:rgba(212,164,100,.30);border-radius:4px;padding:0 3px;'>032</span>";
+        }},
+        { texte:"On rassemble : <span class='acc'>huit millions trente-deux = 8 000 032</span>.", action:()=>{
+          unhlAllRegles();
+          hlRegle('regle-centieme');
+          document.getElementById('a-t1').textContent = 'huit millions trente-deux';
+          document.getElementById('a-eq-res').innerHTML = ' = 8 000 032';
+          document.getElementById('a-eq-res').style.display = 'inline';
+          document.getElementById('a-eq-res').style.color = 'var(--green-dark)';
+        }, dernier:true },
+      ]
+    },
+    {
+      label: 'Million ou milliard ?',
+      tokens: { t1:'1 milliard', op1:'', t2:'' },
+      etapes: [
+        { texte:"<span class='acc'>1 million</span> ou <span class='acc'>1 milliard</span> ? La différence est <span class='acc'>énorme</span>. Visualisons.", action:()=>{
+          hlRegle('regle-centieme');
+        }},
+        { texte:"<span class='acc'>1 million = 1 000 000</span> (6 zéros). Avec 1 million d'euros, on peut acheter une belle maison.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "1 000 000";
+        }},
+        { texte:"<span class='acc'>1 milliard = 1 000 000 000</span> (9 zéros). C'est <span class='acc'>1000 fois plus</span> qu'un million ! On peut acheter un quartier entier.", action:()=>{
+          hlRegle('regle-millieme');
+          document.getElementById('a-t1').innerHTML = "1 000 000 000";
+        }},
+        { texte:"Retiens : <span class='acc'>1 milliard = 1000 millions</span>. Ne confonds jamais les deux.", action:()=>{
+          unhlAllRegles();
+          hlRegle('regle-millieme');
+          document.getElementById('a-t1').textContent = '1 milliard';
+          document.getElementById('a-eq-res').innerHTML = ' = 1000 × 1 million';
+          document.getElementById('a-eq-res').style.display = 'inline';
+          document.getElementById('a-eq-res').style.color = 'var(--green-dark)';
+        }, dernier:true },
+      ]
+    }
+  ];
+
+  // Affiche un token : si c'est une fraction "n/d", l'écrit en barre horizontale ; sinon texte simple
+  function setToken(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const m = /^(\d+)\/(\d+)$/.exec(val);
+    if (m) {
+      el.innerHTML = '<span class="frac"><span class="num">' + m[1] + '</span><span class="den">' + m[2] + '</span></span>';
+    } else {
+      el.textContent = val;
+    }
+  }
+
+  function chargerExempleAnim(idx) {
+    exempleAnim = idx;
+    etapeActuelle = 0;
+    const ex = EXEMPLES_ANIM[idx];
+    document.getElementById('anim-label').textContent = ex.label;
+    setToken('a-t1', ex.tokens.t1);
+    document.getElementById('a-op1').textContent = ex.tokens.op1;
+    document.getElementById('a-t2').textContent = ex.tokens.t2;
+    // Pas d'opérateur ni de 2e nombre dans cette fiche : on masque a-op1 et a-t2
+    document.getElementById('a-op1').style.display = 'none';
+    document.getElementById('a-t2').style.display = 'none';
+    // Reset visuel
+    ['a-t1','a-op1','a-t2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('hl-or','hl-vert'); }
+    });
+    // Reset du suffixe "→ arrondi"
+    const eqRes = document.getElementById('a-eq-res');
+    if (eqRes) { eqRes.textContent = ''; eqRes.style.display = 'none'; eqRes.style.color = 'var(--navy)'; }
+    unhlAllRegles();
+    document.getElementById('etape-texte').innerHTML = 'Appuie sur <strong style="color:var(--gold-deep);">Étape suivante</strong> pour commencer l\'exemple.';
+    const btn = document.getElementById('btn-etape');
+    btn.textContent = 'Étape suivante →'; btn.classList.remove('recommencer'); btn.onclick = etapeSuivante;
+    // On masque le bouton "Compris" : il ne réapparaîtra qu'à la fin du dernier exemple
+    const compris = document.getElementById('btn-compris-wrap');
+    compris.style.display = 'none';
+    compris.style.opacity = '0';
+  }
+
+  function reinitAnim() {
+    chargerExempleAnim(0);
+    document.getElementById('demarrer-wrap').style.display = 'flex';
+    document.getElementById('demarrer-wrap').style.opacity = '1';
+    document.getElementById('para-1').innerHTML = '';
+    const tab = document.getElementById('tab-decalage-wrap');
+    tab.style.display = 'none';
+    tab.style.opacity = '0';
+    unhlAllRegles();
+    // On retire la classe "visible" des 3 lignes pour que l'apparition se rejoue
+    ['regle-dixieme', 'regle-centieme', 'regle-millieme'].forEach(idLigne => {
+      const el = document.getElementById(idLigne);
+      if (el) el.classList.remove('visible');
+    });
+    document.getElementById('suivant-wrap').style.display = 'none';
+    document.getElementById('anim-section').style.display = 'none';
+    document.getElementById('anim-section').style.opacity = '0';
+    document.getElementById('btn-compris-wrap').style.display = 'none';
+    document.getElementById('btn-compris-wrap').style.opacity = '0';
+    paraIndex = 0;
+  }
+
+  function etapeSuivante() {
+    const ex = EXEMPLES_ANIM[exempleAnim];
+    if (etapeActuelle >= ex.etapes.length) return;
+    const e = ex.etapes[etapeActuelle];
+    e.action();
+    const bulle = document.getElementById('etape-bulle');
+    bulle.style.animation = 'none'; bulle.offsetHeight;
+    bulle.style.animation = 'slideUp 0.4s cubic-bezier(.22,1,.36,1) both';
+    document.getElementById('etape-texte').innerHTML = e.texte;
+    parler(e.texte);
+    etapeActuelle++;
+    if (e.dernier) {
+      const btn = document.getElementById('btn-etape');
+      if (exempleAnim < EXEMPLES_ANIM.length - 1) {
+        btn.textContent = 'Voir l\'exemple suivant →';
+        btn.classList.remove('recommencer');
+        btn.onclick = () => chargerExempleAnim(exempleAnim + 1);
+      } else {
+        btn.textContent = '↺ Revoir les exemples';
+        btn.classList.add('recommencer');
+        btn.onclick = () => chargerExempleAnim(0);
+        // Dernier exemple terminé : on révèle le bouton "Compris, on s'entraîne"
+        const compris = document.getElementById('btn-compris-wrap');
+        compris.style.display = 'flex';
+        compris.offsetHeight;
+        setTimeout(() => { compris.style.opacity = '1'; }, 200);
+      }
+    }
+  }
+
+  // ── DONNÉES EXERCICES ───────────────────────────────────────
+  // Fiche ÉCRITURES = passer d'une écriture à l'autre (fraction / décimal / pourcentage).
+  // L'élève choisit toujours entre 2 propositions (bouton A / bouton B).
+  //
+  // Trois séries, alignées sur le cours :
+  //   Série 1 — "reconnaître"           : ces deux écritures désignent-elles le même nombre ?
+  //   Série 2 — "décimal ↔ pourcentage" : appliquer ×100 ou ÷100
+  //   Série 3 — "fraction → décimal"    : les fractions de référence (1/2, 1/4, 3/4, 1/10...)
+  //
+  // Champs communs :
+  //   serie     : 'A' | 'B' | 'C'
+  //   affichage : ce qui s'affiche en gros
+  //   choixA    : { ico, lbl }  — le contenu du bouton A
+  //   choixB    : { ico, lbl }  — le contenu du bouton B
+  //   bonChoix  : 'a' | 'b'
+  //   consigne  : la phrase de consigne
+  //   explik    : explication courte affichée quand c'est juste
+  //   hint      : indice affiché quand c'est faux
+  //   recap     : la chaîne de raisonnement complète (bulle après bonne réponse)
+
+  const EXERCICES = [
+    // ===== SÉRIE 1 — LIRE UN GRAND NOMBRE =====
+    {
+      serie:'A', affichage:'5 200 000',
+      consigne:'<strong>5 200 000</strong> se lit :',
+      choixA:{ ico:'5 millions 200 mille', lbl:'cinq millions deux cent mille' }, choixB:{ ico:'520 mille', lbl:'cinq cent vingt mille' },
+      bonChoix:'a',
+      explik:'On regroupe par tranches : 5 / 200 / 000. La tranche la plus à gauche est les millions → 5 millions, puis 200 mille.',
+      hint:'Découpe par tranches de 3 à partir de la droite : 5 | 200 | 000. Trois tranches → la 1re (à gauche) est les millions.',
+      recap:'<strong style="color:var(--green-dark);">5 200 000 = cinq millions deux cent mille</strong>.'
+    },
+    {
+      serie:'A', affichage:'12 040',
+      consigne:'<strong>12 040</strong> se lit :',
+      choixA:{ ico:'12 millions 40', lbl:'douze millions quarante' }, choixB:{ ico:'12 mille 40', lbl:'douze mille quarante' },
+      bonChoix:'b',
+      explik:'12 040 a deux tranches : 12 et 040. La tranche de gauche est les milliers → douze mille quarante.',
+      hint:'12 040 → 12 | 040. Deux tranches : milliers et unités. Donc douze mille quarante.',
+      recap:'<strong style="color:var(--green-dark);">12 040 = douze mille quarante</strong>. Le 4 est dans la tranche des unités.'
+    },
+    {
+      serie:'A', affichage:'7 030 000 000',
+      consigne:'<strong>7 030 000 000</strong> se lit :',
+      choixA:{ ico:'7 millions 30 mille', lbl:'sept millions trente mille' }, choixB:{ ico:'7 milliards 30 millions', lbl:'sept milliards trente millions' },
+      bonChoix:'b',
+      explik:'4 tranches : 7 / 030 / 000 / 000. Tranche la plus à gauche = milliards → sept milliards, puis trente millions.',
+      hint:'Compte les tranches : 7 | 030 | 000 | 000 → 4 tranches. La 1re (gauche) est les milliards.',
+      recap:'<strong style="color:var(--green-dark);">7 030 000 000 = sept milliards trente millions</strong>.'
+    },
+
+    // ===== SÉRIE 2 — ÉCRIRE EN CHIFFRES =====
+    {
+      serie:'B', affichage:'huit millions',
+      consigne:'Écris en chiffres <strong>huit millions</strong> :',
+      choixA:{ ico:'8 000', lbl:'8 suivi de 3 zéros' }, choixB:{ ico:'8 000 000', lbl:'8 suivi de 6 zéros' },
+      bonChoix:'b',
+      explik:'Un million = 6 zéros. Donc huit millions = 8 suivi de 6 zéros = 8 000 000.',
+      hint:'1 million a 6 zéros (1 000 000). Donc 8 millions = 8 suivi de 6 zéros.',
+      recap:'<strong style="color:var(--green-dark);">8 millions = 8 000 000</strong> : 8 suivi de 6 zéros.'
+    },
+    {
+      serie:'B', affichage:'deux millions cinq cents',
+      consigne:'Écris en chiffres <strong>deux millions cinq cents</strong> :',
+      choixA:{ ico:'2 000 500', lbl:'2, puis 000, puis 500' }, choixB:{ ico:'2 500', lbl:'2 suivi de 500' },
+      bonChoix:'a',
+      explik:'Piège du milieu vide : 2 dans les millions, 0 dans les milliers (non mentionné), 500 dans les unités → 2 000 500.',
+      hint:'Place chaque tranche : 2 (millions) | 000 (milliers, vide car non mentionné) | 500 (unités). → 2 000 500.',
+      recap:'<strong style="color:var(--green-dark);">2 millions 500 = 2 000 500</strong>. La tranche des milliers est vide, on écrit 000.'
+    },
+    {
+      serie:'B', affichage:'trois milliards',
+      consigne:'Écris en chiffres <strong>trois milliards</strong> :',
+      choixA:{ ico:'3 000 000', lbl:'3 suivi de 6 zéros' }, choixB:{ ico:'3 000 000 000', lbl:'3 suivi de 9 zéros' },
+      bonChoix:'b',
+      explik:'Un milliard = 9 zéros. Donc trois milliards = 3 suivi de 9 zéros = 3 000 000 000.',
+      hint:'1 milliard = 1 000 000 000 (9 zéros, c\'est 1000 fois plus qu\'un million).',
+      recap:'<strong style="color:var(--green-dark);">3 milliards = 3 000 000 000</strong> : 3 suivi de 9 zéros.'
+    },
+
+    // ===== SÉRIE 3 — DONNER DU SENS (pont vers les puissances) =====
+    {
+      serie:'C', affichage:'1 million',
+      consigne:'<strong>1 million</strong> = 1 suivi de combien de zéros ?',
+      choixA:{ ico:'6 zéros', lbl:'six zéros' }, choixB:{ ico:'9 zéros', lbl:'neuf zéros' },
+      bonChoix:'a',
+      explik:'1 million = 1 000 000. On compte : 6 zéros. C\'est pour cela qu\'en 4e on écrira 1 million = 10⁶.',
+      hint:'1 million s\'écrit 1 000 000. Compte les zéros un par un : 6 zéros.',
+      recap:'<strong style="color:var(--green-dark);">1 million = 1 000 000 = 6 zéros</strong>. C\'est ce qui sera noté 10⁶ plus tard.'
+    },
+    {
+      serie:'C', affichage:'1 milliard',
+      consigne:'<strong>1 milliard</strong> = 1 suivi de combien de zéros ?',
+      choixA:{ ico:'9 zéros', lbl:'neuf zéros' }, choixB:{ ico:'6 zéros', lbl:'six zéros' },
+      bonChoix:'a',
+      explik:'1 milliard = 1 000 000 000 = 9 zéros. C\'est 1000 fois plus qu\'un million. On l\'écrira 10⁹ en 4e.',
+      hint:'1 milliard = 1 000 millions = 1 000 × 1 000 000. Ça fait 9 zéros au total.',
+      recap:'<strong style="color:var(--green-dark);">1 milliard = 1 000 000 000 = 9 zéros</strong>. C\'est ce qui sera noté 10⁹ plus tard.'
+    },
+    {
+      serie:'C', affichage:'1 milliard = ? millions',
+      consigne:'Combien de <strong>millions</strong> y a-t-il dans <strong>1 milliard</strong> ?',
+      choixA:{ ico:'100', lbl:'cent millions' }, choixB:{ ico:'1 000', lbl:'mille millions' },
+      bonChoix:'b',
+      explik:'1 milliard = 1 000 000 000. 1 million = 1 000 000. 1 milliard ÷ 1 million = 1 000.',
+      hint:'1 milliard a 9 zéros, 1 million a 6 zéros. 9 - 6 = 3 zéros de différence → facteur 1 000.',
+      recap:'<strong style="color:var(--green-dark);">1 milliard = 1 000 millions</strong>. Ne pas confondre million et milliard : il y a un facteur 1000 entre les deux !'
+    },
+  ];
+
+  // ── DONNÉES QUIZ FINAL ──────────────────────────────────────
+  const QUIZ_FINAL = [
+    {
+      serie:'A', affichage:'4 050 000',
+      consigne:'<strong>4 050 000</strong> se lit :',
+      choixA:{ ico:'4 millions 50 mille', lbl:'quatre millions cinquante mille' }, choixB:{ ico:'4 mille 50', lbl:'quatre mille cinquante' },
+      bonChoix:'a', hint:'4 | 050 | 000 → 3 tranches. La 1re (gauche) est les millions.'
+    },
+    {
+      serie:'B', affichage:'six millions',
+      consigne:'Écris <strong>six millions</strong> :',
+      choixA:{ ico:'6 000', lbl:'6 suivi de 3 zéros' }, choixB:{ ico:'6 000 000', lbl:'6 suivi de 6 zéros' },
+      bonChoix:'b', hint:'1 million = 6 zéros. 6 millions = 6 suivi de 6 zéros.'
+    },
+    {
+      serie:'C', affichage:'1 million = ?',
+      consigne:'<strong>1 million</strong> a combien de zéros ?',
+      choixA:{ ico:'6', lbl:'six' }, choixB:{ ico:'9', lbl:'neuf' },
+      bonChoix:'a', hint:'1 million = 1 000 000. Compte : 6 zéros.'
+    },
+    {
+      serie:'A', affichage:'8 200 000 000',
+      consigne:'<strong>8 200 000 000</strong> se lit :',
+      choixA:{ ico:'8 milliards 200 millions', lbl:'huit milliards deux cents millions' }, choixB:{ ico:'8 millions 200 mille', lbl:'huit millions deux cent mille' },
+      bonChoix:'a', hint:'8 | 200 | 000 | 000 → 4 tranches. La 1re est les milliards.'
+    },
+    {
+      serie:'B', affichage:'cinq millions trois',
+      consigne:'Écris <strong>cinq millions trois</strong> :',
+      choixA:{ ico:'5 000 003', lbl:'5, puis 000, puis 003' }, choixB:{ ico:'5 003', lbl:'5 suivi de 003' },
+      bonChoix:'a', hint:'5 dans la tranche des millions, puis 000 pour les milliers (vide), puis 003 pour les unités → 5 000 003.'
+    },
+    {
+      serie:'C', affichage:'1 milliard = ?',
+      consigne:'<strong>1 milliard</strong> a combien de zéros ?',
+      choixA:{ ico:'6', lbl:'six' }, choixB:{ ico:'9', lbl:'neuf' },
+      bonChoix:'b', hint:'1 milliard = 1 000 000 000. Compte : 9 zéros.'
+    },
+    {
+      serie:'B', affichage:'sept milliards',
+      consigne:'Écris <strong>sept milliards</strong> :',
+      choixA:{ ico:'7 000 000', lbl:'7 suivi de 6 zéros' }, choixB:{ ico:'7 000 000 000', lbl:'7 suivi de 9 zéros' },
+      bonChoix:'b', hint:'1 milliard = 9 zéros. 7 milliards = 7 suivi de 9 zéros.'
+    },
+    {
+      serie:'C', affichage:'1 million ? 1 milliard',
+      consigne:'<strong>1 milliard</strong>, c\'est combien de fois <strong>1 million</strong> ?',
+      choixA:{ ico:'100 fois', lbl:'cent fois' }, choixB:{ ico:'1 000 fois', lbl:'mille fois' },
+      bonChoix:'b', hint:'1 milliard = 1 000 millions. Il y a un facteur 1 000 entre les deux.'
+    },
+  ];
+  const ORDRE_FINAL = [0,2,4,6,1,3,5,7];
+
+  // ── HELPERS UI ──────────────────────────────────────────────
+  let exIdx = 0, exBloque = false;
+
+  function setBulle(html) {
+    const b = document.getElementById('ex-bulle');
+    b.style.animation = 'none'; b.offsetHeight;
+    b.style.animation = 'slideUp 0.4s cubic-bezier(.22,1,.36,1) both';
+    document.getElementById('ex-bulle-txt').innerHTML = html;
+    parler(html);
+  }
+  function setFb(txt, ok) {
+    const fb = document.getElementById('ex-fb');
+    fb.textContent = txt;
+    fb.style.background = ok ? 'rgba(21,163,98,0.13)' : 'rgba(212,38,38,0.10)';
+    fb.style.color = ok ? 'var(--green-dark)' : 'var(--red-dark)';
+    fb.style.opacity = '1';
+    parler(txt);
+  }
+  function hideFb() { document.getElementById('ex-fb').style.opacity = '0'; }
+
+  // Libellé court de la série, pour le bandeau
+  function bandeauSerie(serie) {
+    if (serie === 'A') return '◆ Série 1 — Lire un grand nombre';
+    if (serie === 'B') return '◆ Série 2 — Écrire un grand nombre en chiffres';
+    return '◆ Série 3 — Million, milliard : donner du sens';
+  }
+
+  // ── EXERCICES ───────────────────────────────────────────────
+  function chargerEx(ai) {
+    exIdx = ai; exBloque = false;
+    const a = EXERCICES[ai];
+    document.getElementById('cours-badge').textContent = 'Exercice ' + (ai+1) + ' / ' + EXERCICES.length;
+    document.getElementById('cours-fill').style.width = (ai / EXERCICES.length * 100) + '%';
+
+    document.getElementById('ex-serie-label').textContent = bandeauSerie(a.serie);
+    document.getElementById('ex-expr').innerHTML = a.affichage;
+    document.getElementById('ex-consigne').innerHTML = a.consigne;
+
+    // Libellés des boutons
+    document.getElementById('btn-choix-a-ico').textContent = a.choixA.ico;
+    document.getElementById('btn-choix-a-lbl').textContent = a.choixA.lbl;
+    document.getElementById('btn-choix-b-ico').textContent = a.choixB.ico;
+    document.getElementById('btn-choix-b-lbl').textContent = a.choixB.lbl;
+
+    // Bulle d'aide selon la série
+    if (a.serie === 'A') {
+      setBulle('Découpe le nombre en <strong style="color:var(--gold-deep);">tranches de 3 chiffres</strong> à partir de la droite. Compte les tranches : 2 = milliers, 3 = millions, 4 = milliards.');
+    } else if (a.serie === 'B') {
+      setBulle('Pense aux <strong style="color:var(--gold-deep);">tranches vides</strong> ! Si on dit "deux millions cinq cents", il faut écrire les milliers à zéro : 2 <strong style="color:var(--gold-deep);">000</strong> 500.');
+    } else {
+      setBulle('Retiens : <strong style="color:var(--gold-deep);">million = 6 zéros</strong>, <strong style="color:var(--gold-deep);">milliard = 9 zéros</strong>. Il y a un facteur 1000 entre les deux !');
+    }
+
+    // Reset boutons
+    const ba = document.getElementById('btn-choix-a');
+    const bb = document.getElementById('btn-choix-b');
+    ba.classList.remove('correct','wrong-flash');
+    bb.classList.remove('correct','wrong-flash');
+    ba.style.pointerEvents = 'auto';
+    bb.style.pointerEvents = 'auto';
+    ba.style.opacity = '1';
+    bb.style.opacity = '1';
+
+    hideFb();
+    document.getElementById('ex-btn').style.display = 'none';
+    window.scrollTo(0,0);
+  }
+
+  // Gestion du clic sur un bouton de choix
+  function exClicChoix(choix) {
+    if (exBloque) return;
+    const a = EXERCICES[exIdx];
+
+    const ba = document.getElementById('btn-choix-a');
+    const bb = document.getElementById('btn-choix-b');
+    const btnClique = choix === 'a' ? ba : bb;
+
+    if (choix !== a.bonChoix) {
+      // Mauvais choix : flash rouge + indice ciblé
+      btnClique.classList.add('wrong-flash');
+      setTimeout(() => btnClique.classList.remove('wrong-flash'), 500);
+      setFb('✗ Non — ' + a.hint, false);
+      return;
+    }
+
+    // Bon choix
+    btnClique.classList.add('correct');
+    const autreBtn = choix === 'a' ? bb : ba;
+    autreBtn.style.pointerEvents = 'none';
+    autreBtn.style.opacity = '0.4';
+    exBloque = true;
+    // L'explication reste affichée : c'est elle qui ancre le raisonnement
+    setFb('✓ ' + a.explik, true);
+    // La bulle d'aide se transforme en récap (sans masquer le feedback)
+    setBulle(a.recap);
+    // Le bouton "suivant" apparaît juste après, sans rien faire disparaître
+    const btn = document.getElementById('ex-btn');
+    btn.style.display = 'inline-block';
+    btn.textContent = (exIdx >= EXERCICES.length - 1) ? 'Terminer les exercices →' : 'Exercice suivant →';
+    btn.onclick = suiteEx;
+  }
+
+  function suiteEx() {
+    exIdx++;
+    if (exIdx >= EXERCICES.length) { allerVers('ecran-cours','ecran-transition-final'); return; }
+    chargerEx(exIdx);
+  }
+
+  // ── QUIZ FINAL ──────────────────────────────────────────────
+  let qFIdx = 0, bloqueF = false, bonnesF = 0;
+
+  function versQuizFinal() {
+    allerVers('ecran-transition-final','ecran-quiz-final');
+    qFIdx = 0; bonnesF = 0; bloqueF = false;
+    setTimeout(() => chargerQF(0), 500);
+  }
+
+  function chargerQF(i) {
+    bloqueF = false;
+    const a = QUIZ_FINAL[ORDRE_FINAL[i]];
+    document.getElementById('prog-label-f').textContent = 'Question ' + (i+1) + ' / ' + QUIZ_FINAL.length;
+    document.getElementById('prog-fill-f').style.width = (i / QUIZ_FINAL.length * 100) + '%';
+    document.getElementById('feedback-f').className = 'feedback';
+    document.getElementById('feedback-f').innerHTML = '';
+
+    document.getElementById('quiz-consigne-f').innerHTML = a.consigne;
+    document.getElementById('quiz-expr-zone').innerHTML = a.affichage;
+
+    // Libellés des boutons
+    document.getElementById('qf-btn-a-ico').textContent = a.choixA.ico;
+    document.getElementById('qf-btn-a-lbl').textContent = a.choixA.lbl;
+    document.getElementById('qf-btn-b-ico').textContent = a.choixB.ico;
+    document.getElementById('qf-btn-b-lbl').textContent = a.choixB.lbl;
+
+    // Reset boutons
+    const ba = document.getElementById('qf-btn-a');
+    const bb = document.getElementById('qf-btn-b');
+    ba.classList.remove('correct','wrong-flash');
+    bb.classList.remove('correct','wrong-flash');
+    ba.style.pointerEvents = 'auto';
+    bb.style.pointerEvents = 'auto';
+    ba.style.opacity = '1';
+    bb.style.opacity = '1';
+
+    parler(a.consigne.replace(/<[^>]+>/g, '') + ' ' + a.affichage);
+  }
+
+  function repondreFinal(choix) {
+    if (bloqueF) return;
+    const a = QUIZ_FINAL[ORDRE_FINAL[qFIdx]];
+    bloqueF = true;
+
+    const ba = document.getElementById('qf-btn-a');
+    const bb = document.getElementById('qf-btn-b');
+    const btnClique = choix === 'a' ? ba : bb;
+    const btnAutre = choix === 'a' ? bb : ba;
+    ba.style.pointerEvents = 'none';
+    bb.style.pointerEvents = 'none';
+
+    const fb = document.getElementById('feedback-f');
+    if (choix === a.bonChoix) {
+      bonnesF++;
+      btnClique.classList.add('correct');
+      fb.textContent = '✓ Correct !';
+      fb.style.background = 'rgba(21,163,98,0.13)';
+      fb.style.color = 'var(--green-dark)';
+      fb.className = 'feedback show';
+    } else {
+      btnClique.classList.add('wrong-flash');
+      btnAutre.classList.add('correct');
+      fb.textContent = '✗ Raté — ' + a.hint;
+      fb.style.background = 'rgba(212,38,38,0.10)';
+      fb.style.color = 'var(--red-dark)';
+      fb.className = 'feedback show';
+    }
+
+    setTimeout(() => {
+      qFIdx++;
+      if (qFIdx >= QUIZ_FINAL.length) finalResultat();
+      else {
+        const z = document.getElementById('quiz-expr-zone');
+        z.style.opacity = '0';
+        z.style.transition = 'opacity 0.3s';
+        setTimeout(() => {
+          chargerQF(qFIdx);
+          z.style.opacity = '1';
+          bloqueF = false;
+        }, 300);
+      }
+    }, 1600);
+  }
+
+  function finalResultat() {
+    const score = Math.round(bonnesF / QUIZ_FINAL.length * 100);
+    nbTentatives++;
+    if (score >= 80) {
+      sauvegarder('quiz_final_valide', score, nbTentatives);
+      document.getElementById('texte-ok').innerHTML = 'Tu as eu <strong style="color:var(--green-dark);">' + bonnesF + ' / ' + QUIZ_FINAL.length + '</strong> bonnes réponses. Tu sais manipuler les grands nombres ! Tu es prêt pour comprendre les puissances de 10 ! 🎉';
+      allerVers('ecran-quiz-final','ecran-final-ok');
+    } else if (nbTentatives >= MAX_TENTATIVES) {
+      sauvegarder('echec_3_tentatives', score, nbTentatives, { prof_email:profEmail });
+      allerVers('ecran-quiz-final','ecran-bloque');
+    } else {
+      sauvegarder('quiz_final_echec', score, nbTentatives);
+      const r = MAX_TENTATIVES - nbTentatives;
+      document.getElementById('texte-revoir').innerHTML = 'Tu as eu <strong>' + bonnesF + ' / ' + QUIZ_FINAL.length + '</strong> bonnes réponses (' + score + '%).<br>Il te reste <strong>' + r + ' tentative' + (r>1?'s':'') + '</strong>.<br>Retiens bien : million = 6 zéros, milliard = 9 zéros. Tu vas y arriver !';
+      allerVers('ecran-quiz-final','ecran-final-revoir');
+    }
+  }
+
+  function allerVers(a, b) {
+    const d=document.getElementById(a), ar=document.getElementById(b);
+    d.style.transition='opacity 0.5s ease'; d.style.opacity='0';
+    setTimeout(() => {
+      d.classList.add('cache'); d.style.opacity='1';
+      ar.classList.remove('cache'); ar.style.opacity='0';
+      ar.style.transition='opacity 0.5s ease';
+      setTimeout(() => { ar.style.opacity='1'; }, 20);
+    }, 500);
+  }
+</script>
+</body>
+</html>

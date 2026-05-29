@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche remédiation — Calculer avec des puissances de 10</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Sora:wght@400;500;600;700;800&family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=OpenDyslexic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      /* ── Palette écosystème ── */
+      --navy: #1A2C4F;
+      --navy-deep: #142340;
+      --gold: #C28A42;
+      --gold-l: #D4A464;
+      --gold-deep: #B47A35;
+      --gold-dark: #8F5F26;
+      --gold-pale: rgba(212,164,100,.10);
+      --gold-soft: rgba(212,164,100,.18);
+      --gold-bg: rgba(212,164,100,.06);
+      --beige: #F4F2EE;
+      --beige-l: #FAF8F4;
+      --cream: #FDF9F0;
+      --cream-l: #FEFCF5;
+      --white: #FFFFFF;
+      --green: #15A362;
+      --green-dark: #0E7348;
+      --green-l: #E8F5EE;
+      --red: #D42626;
+      --red-dark: #A11717;
+      --red-l: #FEF2F2;
+      --text: #1A1311;
+      --text2: #4A4036;
+      --text3: #8A7F73;
+      --border: rgba(20,19,16,.10);
+
+      --r: 12px;
+      --rl: 16px;
+      --rxl: 22px;
+
+      --or: var(--gold);
+      --or-pale: var(--gold-pale);
+      --or-bord: var(--gold-deep);
+    }
+
+    /* ══ MODE DYS ══════════════════════════════════════════════ */
+    body.dys { font-family:'OpenDyslexic',Arial,sans-serif !important; }
+    body.dys .titre, body.dys .texte-intro, body.dys .q-txt,
+    body.dys .btn, body.dys .feedback, body.dys .regle-texte,
+    body.dys .etape-texte, body.dys .ex-bulle-txt {
+      font-family:'OpenDyslexic',Arial,sans-serif !important;
+      line-height:1.9 !important;
+    }
+
+    /* ══ ANIMATIONS ════════════════════════════════════════════ */
+    @keyframes gradientWave { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes btnGlow {
+      0%   { box-shadow: 0 0 0 0 rgba(194,138,66,0); }
+      50%  { box-shadow: 0 6px 20px rgba(194,138,66,.30), 0 0 0 0 rgba(194,138,66,.10); }
+      100% { box-shadow: 0 0 0 0 rgba(194,138,66,0); }
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(194,138,66,0.45); }
+      50%     { box-shadow: 0 0 0 10px rgba(194,138,66,0); }
+    }
+    @keyframes popIn { 0%{opacity:0;transform:scale(0.5)} 70%{transform:scale(1.1)} 100%{opacity:1;transform:scale(1)} }
+    @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes virguleBounce {
+      0% { transform:translateX(0) scale(1); }
+      50% { transform:translateX(0) scale(1.4); color:var(--gold-deep); }
+      100% { transform:translateX(0) scale(1); }
+    }
+
+    /* ══ BASE ══════════════════════════════════════════════════ */
+    html { height:100%; }
+    body {
+      min-height:100vh;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      font-family:'Inter Tight', system-ui, -apple-system, sans-serif;
+      color:var(--text);
+      background:var(--beige);
+      overflow-y:auto;
+    }
+
+    /* ══ HEADER ════════════════════════════════════════════════ */
+    .header {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:center;
+      padding:16px 28px;
+      background:rgba(244,242,238,.75);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border);
+      animation:fadeUp 0.6s cubic-bezier(.22,1,.36,1) both;
+    }
+    .header-ligne {
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:500;
+      color:var(--text2);
+      display:flex; align-items:center; gap:10px;
+      letter-spacing:-.05px;
+    }
+    .header-sep { color:var(--gold-deep); font-weight:700; }
+    .header-nom {
+      font-family:'Sora', sans-serif;
+      font-weight:700; color:var(--navy);
+      letter-spacing:-.2px;
+    }
+
+    .header-dys-badge {
+      display:none;
+      position:absolute; right:20px;
+      align-items:center; gap:6px;
+      padding:5px 12px; border-radius:999px;
+      background:var(--gold-pale);
+      border:1px solid var(--gold-soft);
+      font-family:'Inter Tight', sans-serif;
+      font-size:10.5px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:0.04em;
+    }
+    .header-dys-badge.visible { display:inline-flex; }
+    .header-dys-badge::before {
+      content:'';
+      width:6px; height:6px;
+      border-radius:50%;
+      background:var(--gold);
+    }
+
+    .header-audio-toggle {
+      position:absolute; left:20px;
+      width:36px; height:36px;
+      border-radius:50%;
+      border:1.5px solid var(--border);
+      background:rgba(255,255,255,.7);
+      font-size:16px;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:all .2s;
+      padding:0;
+      line-height:1;
+    }
+    .header-audio-toggle:hover {
+      background:var(--gold-pale);
+      border-color:var(--gold);
+      transform:scale(1.05);
+    }
+    .header-audio-toggle.active {
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      border-color:var(--gold-deep);
+      color:#fff;
+      box-shadow:0 4px 12px rgba(194,138,66,.30);
+    }
+    .header-audio-toggle.active.speaking {
+      animation:pulse 1.2s ease-in-out infinite;
+    }
+
+    .audio-toggle-card {
+      margin-top:8px;
+      padding:10px 22px 10px 16px;
+      border-radius:999px;
+      border:1.5px solid var(--gold-soft);
+      background:var(--gold-pale);
+      font-family:'Inter Tight', sans-serif;
+      font-size:13px; font-weight:600;
+      color:var(--gold-deep);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      letter-spacing:-.05px;
+      transition:all .2s;
+    }
+    .audio-toggle-card .ico {
+      font-size:16px;
+      width:24px; height:24px;
+      display:inline-flex;
+      align-items:center; justify-content:center;
+      border-radius:50%;
+      background:rgba(255,255,255,.8);
+    }
+    .audio-toggle-card:hover {
+      background:var(--gold-soft);
+      border-color:var(--gold);
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(194,138,66,.20);
+    }
+    .audio-toggle-card.active {
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      border-color:var(--gold-deep);
+      color:#fff;
+      box-shadow:0 4px 14px rgba(194,138,66,.30);
+    }
+    .audio-toggle-card.active .ico {
+      background:rgba(255,255,255,.25);
+    }
+    .audio-toggle-card.active.speaking {
+      animation:pulse 1.2s ease-in-out infinite;
+    }
+    body.dys .audio-toggle-card { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* ══ ÉCRANS ════════════════════════════════════════════════ */
+    .ecran {
+      display:flex; align-items:center; justify-content:center;
+      width:100%; min-height:100vh;
+      padding-top:80px; padding-bottom:40px;
+    }
+    .ecran.cache { display:none; }
+    .fond-vert {
+      background:linear-gradient(135deg, #E8F5EE 0%, #F4F2EE 50%, #FAF8F4 100%);
+      background-size:200% 200%;
+      animation:gradientWave 18s ease infinite;
+    }
+    .fond-chaud {
+      background:linear-gradient(135deg, var(--cream) 0%, var(--beige) 50%, var(--cream-l) 100%);
+      background-size:200% 200%;
+      animation:gradientWave 22s ease infinite;
+    }
+
+    /* ══ CARTES ════════════════════════════════════════════════ */
+    .carte {
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      border-radius:var(--rxl);
+      padding:44px 38px;
+      max-width:520px; width:90%;
+      box-shadow:0 14px 48px rgba(0,0,0,.06);
+      display:flex; flex-direction:column;
+      align-items:center; gap:18px;
+      text-align:center;
+    }
+    .anime { animation:fadeUp 0.7s cubic-bezier(.22,1,.36,1) both; }
+
+    .badge {
+      display:inline-flex;
+      padding:6px 14px;
+      border-radius:999px;
+      background:var(--gold-pale);
+      border:1px solid var(--gold-soft);
+      font-family:'Inter Tight', sans-serif;
+      font-size:11px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .titre {
+      font-family:'Fraunces', serif;
+      font-style:italic;
+      font-size:clamp(28px, 4.5vw, 38px);
+      font-weight:500;
+      color:var(--navy);
+      line-height:1.1;
+      letter-spacing:-.5px;
+    }
+    .accent {
+      color:var(--gold-deep);
+      font-weight:600;
+    }
+    .texte-intro {
+      font-family:'Inter Tight', sans-serif;
+      font-size:15px; font-weight:500;
+      color:var(--text2);
+      line-height:1.6;
+      letter-spacing:-.05px;
+    }
+    .texte-intro small {
+      display:inline-block;
+      margin-top:6px;
+      font-size:12.5px;
+      color:var(--gold-deep);
+      font-weight:600;
+    }
+
+    .btn {
+      font-family:'Inter Tight', sans-serif;
+      padding:14px 36px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:14px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      animation:btnGlow 2.2s ease-in-out infinite;
+      transition:transform .15s, box-shadow .2s;
+    }
+    .btn:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(194,138,66,.35);
+    }
+
+    /* ══ ÉCRAN COURS ═══════════════════════════════════════════ */
+    .cours-carte {
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      border-radius:var(--rxl);
+      padding:36px 30px;
+      max-width:760px; width:92%;
+      box-shadow:0 14px 48px rgba(0,0,0,.06);
+      display:flex; flex-direction:column;
+      align-items:center; gap:24px;
+      animation:fadeUp 0.7s cubic-bezier(.22,1,.36,1) both;
+    }
+    .cours-prog-header {
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .cours-prog-badge {
+      padding:6px 14px;
+      border-radius:999px;
+      background:var(--gold-pale);
+      border:1px solid var(--gold-soft);
+      font-family:'Inter Tight', sans-serif;
+      font-size:11px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+    .cours-prog-num {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px; font-weight:600;
+      color:var(--text3);
+      letter-spacing:-.05px;
+    }
+    .cours-prog-track {
+      width:100%; height:5px;
+      background:rgba(20,19,16,.05);
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:8px;
+    }
+    .cours-prog-fill {
+      height:100%;
+      background:linear-gradient(90deg, var(--gold-l), var(--gold-deep));
+      border-radius:999px;
+      transition:width 0.5s cubic-bezier(.22,1,.36,1);
+      width:0%;
+    }
+
+    .regle-bloc {
+      width:100%;
+      background:var(--gold-bg);
+      border:1px solid var(--gold-soft);
+      border-radius:var(--rl);
+      padding:24px 22px;
+      margin-bottom:12px;
+    }
+    .regle-label {
+      font-family:'Inter Tight', sans-serif;
+      font-size:10.5px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+    .regle-texte {
+      font-family:'Inter Tight', sans-serif;
+      font-size:14.5px; font-weight:500;
+      color:var(--text);
+      line-height:1.7;
+      letter-spacing:-.05px;
+    }
+    .demarrer-wrap {
+      width:100%;
+      display:flex;
+      justify-content:center;
+      padding:20px 0;
+    }
+    .btn-demarrer {
+      font-family:'Inter Tight', sans-serif;
+      padding:12px 28px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      transition:transform .15s, box-shadow .2s;
+      box-shadow:0 4px 14px rgba(194,138,66,.25);
+    }
+    .btn-demarrer:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(194,138,66,.35);
+    }
+
+    /* ══ Effet typewriter ══════════════════════════════════════ */
+    .para-tw { min-height:0; position:relative; }
+    .para-tw:empty { display:none; }
+    @keyframes blinkCursor {
+      0%, 49% { opacity:1; }
+      50%, 100% { opacity:0; }
+    }
+    .tw-cursor {
+      display:inline-block;
+      width:2px; height:1em;
+      background:var(--gold-deep);
+      vertical-align:text-bottom;
+      margin-left:2px;
+      animation:blinkCursor 0.85s steps(1) infinite;
+      transform:translateY(2px);
+    }
+
+    @keyframes fadeInSuivant {
+      from { opacity:0; transform:translateY(6px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .suivant-wrap {
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:18px;
+      animation:fadeInSuivant 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .btn-suivant {
+      font-family:'Inter Tight', sans-serif;
+      padding:8px 22px;
+      border-radius:999px;
+      border:1.5px solid var(--gold);
+      background:transparent;
+      font-size:12.5px; font-weight:700;
+      color:var(--gold-deep);
+      cursor:pointer;
+      letter-spacing:.02em;
+      transition:all .2s;
+    }
+    .btn-suivant:hover {
+      background:var(--gold);
+      color:#fff;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(194,138,66,.25);
+    }
+
+    /* ══ ANIMATION ÉTAPES ══════════════════════════════════════ */
+    .anim-section {
+      width:100%;
+      background:var(--gold-bg);
+      border:1px solid var(--gold-soft);
+      border-radius:var(--rl);
+      padding:24px 20px;
+      display:flex; flex-direction:column;
+      align-items:center; gap:20px;
+    }
+    .anim-section-label {
+      font-family:'Inter Tight', sans-serif;
+      font-size:10px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      align-self:flex-start;
+    }
+
+    /* ══ EXPRESSION (chiffres + opérateurs) ═══════════════════ */
+    .expr-token {
+      font-family:'Sora', sans-serif;
+      font-size:42px; font-weight:700;
+      color:var(--navy);
+      line-height:1;
+      padding:5px 10px;
+      border-radius:10px;
+      letter-spacing:-.5px;
+      transition:all 0.4s cubic-bezier(.22,1,.36,1);
+      display:inline-block;
+    }
+    .expr-op {
+      font-family:'Sora', sans-serif;
+      font-size:36px; font-weight:700;
+      color:var(--gold-deep);
+      line-height:1;
+      padding:5px 6px;
+      border-radius:10px;
+      transition:all 0.4s cubic-bezier(.22,1,.36,1);
+      display:inline-block;
+    }
+    .hl-or { background:rgba(212,164,100,.30) !important; color:var(--gold-deep) !important; transform:scale(1.08); }
+    .hl-vert { background:rgba(21,163,98,.15) !important; color:var(--green-dark) !important; }
+
+    .etape-bulle {
+      width:100%;
+      background:rgba(255,255,255,.85);
+      border-radius:var(--rl);
+      padding:14px 18px;
+      animation:slideUp 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .etape-texte {
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:500;
+      color:var(--text);
+      line-height:1.6;
+      letter-spacing:-.05px;
+      text-align:center;
+    }
+    .etape-texte .acc {
+      font-weight:700;
+      color:var(--gold-deep);
+    }
+    .etape-texte .vrt {
+      font-weight:700;
+      color:var(--green-dark);
+    }
+    .btn-etape {
+      font-family:'Inter Tight', sans-serif;
+      padding:10px 26px;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      transition:all .2s;
+      box-shadow:0 4px 12px rgba(194,138,66,.22);
+    }
+    .btn-etape:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(194,138,66,.32);
+    }
+    .btn-etape.recommencer {
+      background:rgba(255,255,255,.85);
+      color:var(--gold-deep);
+      border:1.5px solid var(--gold);
+      box-shadow:none;
+    }
+
+    .btn-compris-wrap {
+      width:100%;
+      display:flex;
+      justify-content:center;
+      margin-top:24px;
+    }
+    .btn-compris {
+      font-family:'Inter Tight', sans-serif;
+      padding:14px 32px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      animation:btnGlow 2.2s ease-in-out infinite;
+      transition:transform .15s, box-shadow .2s;
+    }
+    .btn-compris:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 24px rgba(194,138,66,.35);
+    }
+
+    /* ══ EXERCICE ══════════════════════════════════════════════ */
+    .ex-input {
+      width:130px;
+      padding:10px 8px;
+      border:2px solid var(--border);
+      border-radius:10px;
+      font-family:'Sora', sans-serif;
+      font-size:30px; font-weight:700;
+      color:var(--navy);
+      text-align:center;
+      background:rgba(255,255,255,.85);
+      transition:all .2s;
+      letter-spacing:-.5px;
+    }
+    .ex-input:focus {
+      outline:none;
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px var(--gold-pale);
+    }
+    .ex-input:disabled {
+      cursor:not-allowed;
+    }
+
+    .ex-bulle-box {
+      width:100%;
+      background:rgba(255,255,255,.85);
+      border-radius:var(--rl);
+      padding:14px 18px;
+      animation:slideUp 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+    .ex-bulle-txt {
+      font-family:'Inter Tight', sans-serif;
+      font-size:14px; font-weight:500;
+      color:var(--text);
+      line-height:1.6;
+      letter-spacing:-.05px;
+      text-align:center;
+    }
+    .ex-fb {
+      width:100%;
+      padding:10px 16px;
+      border-radius:10px;
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:600;
+      text-align:center;
+      opacity:0;
+      transition:opacity 0.3s;
+      letter-spacing:-.05px;
+      min-height:0;
+    }
+    .btn-ex {
+      font-family:'Inter Tight', sans-serif;
+      padding:12px 30px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      transition:all .2s;
+      box-shadow:0 4px 12px rgba(194,138,66,.22);
+    }
+    .btn-ex:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(194,138,66,.32);
+    }
+
+    /* ══ QUIZ ══════════════════════════════════════════════════ */
+    .prog-wrap {
+      width:100%;
+      display:flex; flex-direction:column;
+      gap:8px;
+    }
+    .prog-label {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11.5px; font-weight:700;
+      color:var(--gold-deep);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .prog-track {
+      width:100%; height:6px;
+      background:rgba(20,19,16,.06);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .prog-fill {
+      height:100%;
+      background:linear-gradient(90deg, var(--gold-l), var(--gold-deep));
+      border-radius:999px;
+      transition:width 0.5s cubic-bezier(.22,1,.36,1);
+      width:0%;
+    }
+    .quiz-carte {
+      background:rgba(255,255,255,.85);
+      backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--border);
+      border-radius:var(--rxl);
+      padding:36px 30px;
+      max-width:640px; width:92%;
+      box-shadow:0 14px 48px rgba(0,0,0,.06);
+      display:flex; flex-direction:column;
+      align-items:center; gap:22px;
+      animation:fadeUp 0.7s cubic-bezier(.22,1,.36,1) both;
+    }
+    .consigne-f {
+      font-family:'Inter Tight', sans-serif;
+      font-size:15px; font-weight:600;
+      color:var(--text);
+      text-align:center;
+      letter-spacing:-.05px;
+    }
+    .quiz-input {
+      width:160px;
+      padding:12px 8px;
+      border:2px solid var(--border);
+      border-radius:10px;
+      font-family:'Sora', sans-serif;
+      font-size:32px; font-weight:700;
+      color:var(--navy);
+      text-align:center;
+      background:rgba(255,255,255,.85);
+      transition:all .2s;
+      letter-spacing:-.5px;
+    }
+    .quiz-input:focus {
+      outline:none;
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px var(--gold-pale);
+    }
+    .quiz-btn-val {
+      font-family:'Inter Tight', sans-serif;
+      padding:12px 32px;
+      border-radius:var(--r);
+      border:none;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      font-size:13.5px; font-weight:700;
+      color:#fff;
+      cursor:pointer;
+      letter-spacing:-.05px;
+      box-shadow:0 4px 12px rgba(194,138,66,.22);
+      transition:all .2s;
+    }
+    .quiz-btn-val:hover {
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(194,138,66,.32);
+    }
+    .feedback {
+      min-height:0;
+      padding:0;
+      font-family:'Inter Tight', sans-serif;
+      font-size:13.5px; font-weight:600;
+      text-align:center;
+      opacity:0;
+      transition:opacity 0.3s;
+    }
+    .feedback.show {
+      opacity:1;
+      padding:10px 16px;
+    }
+
+    /* Expression dans quiz */
+    .quiz-expr {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      font-family:'Sora', sans-serif;
+      font-size:38px; font-weight:700;
+      color:var(--navy);
+      letter-spacing:-.5px;
+    }
+    .quiz-expr .op {
+      color:var(--gold-deep);
+    }
+
+    /* Expression dans exercice (zone-exo) */
+    .exo-expr {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      font-family:'Sora', sans-serif;
+      font-size:44px; font-weight:700;
+      color:var(--navy);
+      letter-spacing:-.5px;
+    }
+    .exo-expr .op {
+      color:var(--gold-deep);
+    }
+    .exo-expr .tok {
+      padding:4px 8px;
+      border-radius:8px;
+      transition:all 0.4s cubic-bezier(.22,1,.36,1);
+    }
+    .exo-expr .virgule-anim {
+      display:inline-block;
+      transition:all 0.5s cubic-bezier(.22,1,.36,1);
+    }
+    .exo-expr .virgule-bounce {
+      animation:virguleBounce 0.7s ease;
+    }
+
+    /* ══ LAYOUT 2 COLONNES (règle + animation côte à côte) ════ */
+    .cours-carte-wide {
+      max-width:920px !important;
+      width:94% !important;
+    }
+    .deux-colonnes {
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      width:100%;
+      align-items:stretch;
+    }
+    .deux-colonnes > .regle-bloc,
+    .deux-colonnes > .anim-section {
+      width:100%;
+      margin-bottom:0 !important;
+      min-width:0;
+    }
+
+    /* ══ TABLEAU DES RÈGLES DE DÉCALAGE ════════════════════════ */
+    .regles-decalage {
+      width:100%;
+      margin:18px auto 6px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      animation:fadeIn 0.5s cubic-bezier(.22,1,.36,1) both;
+    }
+    .regles-section-titre {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11px; font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-align:center;
+      margin-top:6px;
+      margin-bottom:2px;
+    }
+    .regles-section-titre.droite { color:var(--green-dark); }
+    .regles-section-titre.gauche { color:var(--red-dark); }
+    .regle-ligne {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:9px 14px;
+      border-radius:10px;
+      background:rgba(255,255,255,.85);
+      border:1.5px solid var(--border);
+      font-family:'Sora', sans-serif;
+      font-size:18px;
+      font-weight:700;
+      color:var(--navy);
+      transition:all 0.3s ease;
+    }
+    .regle-ligne .op-symb {
+      color:var(--gold-deep);
+      font-weight:700;
+      font-size:18px;
+      min-width:42px;
+      text-align:center;
+    }
+    .regle-ligne .arrow-r {
+      color:var(--green-dark);
+      font-size:20px;
+      font-weight:700;
+    }
+    .regle-ligne .arrow-l {
+      color:var(--red-dark);
+      font-size:20px;
+      font-weight:700;
+    }
+    .regle-ligne .crans-txt {
+      font-family:'Inter Tight', sans-serif;
+      font-size:13px;
+      font-weight:600;
+      color:var(--text2);
+      letter-spacing:-.05px;
+    }
+    .regle-ligne.regle-active {
+      transform:scale(1.04);
+      box-shadow:0 0 0 3px var(--gold-deep), 0 6px 20px rgba(194,138,66,.35);
+      position:relative;
+      z-index:2;
+    }
+    /* Surlignage d'une ligne de consigne quand l'exemple de droite la pointe */
+    .consigne-ligne.regle-active {
+      background:var(--gold-bg);
+      box-shadow:0 0 0 2px var(--gold-soft), 0 6px 18px rgba(194,138,66,.18);
+      transform:scale(1.03);
+      position:relative;
+      z-index:2;
+    }
+    .consigne-ligne.regle-active .consigne-nombre {
+      color:var(--gold-deep);
+    }
+    .regles-legende {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px;
+      color:var(--text2);
+      text-align:center;
+      margin-top:8px;
+      font-style:italic;
+    }
+
+    /* ══ BOUTONS SENS ← / → ══════════════════════════════════════ */
+    .btn-sens {
+      width:170px; min-height:96px;
+      padding:12px 10px;
+      border-radius:18px;
+      border:3px solid var(--gold-deep);
+      background:rgba(255,255,255,.85);
+      cursor:pointer;
+      transition:all 0.2s;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:4px;
+      line-height:1.15;
+      box-shadow:0 4px 12px rgba(194,138,66,.18);
+      color:var(--gold-deep);
+      font-family:'Sora', sans-serif;
+    }
+    .btn-sens .ico {
+      font-size:36px;
+      font-weight:700;
+      line-height:1;
+    }
+    .btn-sens .lbl {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11.5px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      margin-top:2px;
+      text-align:center;
+    }
+    .btn-sens:hover {
+      background:var(--gold-pale);
+      transform:translateY(-2px);
+      box-shadow:0 8px 22px rgba(194,138,66,.30);
+    }
+    .btn-sens:active {
+      transform:translateY(0);
+    }
+    .btn-sens.correct {
+      background:linear-gradient(180deg, rgba(21,163,98,.20), rgba(14,115,72,.30));
+      border-color:var(--green-dark);
+      color:var(--green-dark);
+      pointer-events:none;
+    }
+    .btn-sens.wrong-flash {
+      animation:wrongShake 0.4s ease;
+      background:rgba(212,38,38,.18);
+      border-color:var(--red-dark);
+      color:var(--red-dark);
+    }
+    @keyframes wrongShake {
+      0%,100% { transform:translateX(0); background:rgba(212,38,38,.18); }
+      25% { transform:translateX(-4px); }
+      75% { transform:translateX(4px); }
+    }
+
+    /* ══ ÉCRAN "À RETENIR" — habillage dédié ═══════════════════ */
+    /* Titre de fiche en haut de la carte cours */
+    .cours-titre-fiche {
+      width:100%;
+      text-align:center;
+      margin-bottom:6px;
+    }
+    .cours-titre-fiche h1 {
+      font-family:'Fraunces', serif;
+      font-style:italic;
+      font-weight:500;
+      font-size:clamp(22px, 3vw, 30px);
+      color:var(--navy);
+      line-height:1.15;
+      letter-spacing:-.5px;
+    }
+    .cours-titre-fiche h1 .accent {
+      color:var(--gold-deep);
+      font-weight:600;
+    }
+    .cours-titre-fiche .sous {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px;
+      font-weight:600;
+      color:var(--text3);
+      margin-top:4px;
+      letter-spacing:-.05px;
+    }
+    body.dys .cours-titre-fiche h1,
+    body.dys .cours-titre-fiche .sous { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* Intro de la partie 1 */
+    .consigne-intro {
+      font-family:'Inter Tight', sans-serif;
+      font-size:14px;
+      font-weight:600;
+      color:var(--text);
+      text-align:center;
+      margin-bottom:14px;
+      line-height:1.5;
+      letter-spacing:-.05px;
+    }
+    .consigne-intro .num-pastille {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px; height:22px;
+      border-radius:50%;
+      background:var(--gold-deep);
+      color:#fff;
+      font-family:'Sora', sans-serif;
+      font-size:12px;
+      font-weight:800;
+      margin-right:4px;
+      vertical-align:-2px;
+    }
+    .consigne-intro .nb-repere {
+      font-family:'Sora', sans-serif;
+      font-weight:700;
+      color:var(--navy);
+      background:rgba(26,44,79,.07);
+      border-radius:6px;
+      padding:1px 7px;
+    }
+    body.dys .consigne-intro { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* Lignes de consigne (dixième / centième / millième) — disposées en ligne */
+    .consigne-liste {
+      display:flex;
+      flex-direction:row;
+      gap:0;
+      width:100%;
+      justify-content:center;
+      align-items:stretch;
+    }
+    .consigne-ligne {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      gap:8px;
+      flex:1 1 0;
+      padding:14px 10px;
+      border-radius:14px;
+      /* État initial : caché, pour l'apparition progressive */
+      opacity:0;
+      transform:translateY(12px);
+      transition:opacity .45s cubic-bezier(.22,1,.36,1), transform .35s cubic-bezier(.22,1,.36,1), background-color .3s ease, box-shadow .3s ease;
+    }
+    .consigne-ligne.visible {
+      opacity:1;
+      transform:translateY(0);
+    }
+    /* Trait de séparation vertical entre les colonnes */
+    .consigne-ligne + .consigne-ligne {
+      border-left:1px solid var(--border);
+    }
+    .consigne-badge {
+      font-family:'Inter Tight', sans-serif;
+      font-size:10px;
+      font-weight:800;
+      color:#fff;
+      background:linear-gradient(180deg, var(--gold-l), var(--gold-deep));
+      border-radius:999px;
+      padding:5px 12px;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      box-shadow:0 3px 10px rgba(194,138,66,.28);
+    }
+    body.dys .consigne-badge { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+    .consigne-nombre {
+      font-family:'Sora', sans-serif;
+      font-size:30px;
+      font-weight:800;
+      letter-spacing:-1px;
+      line-height:1;
+      color:var(--navy);
+    }
+    /* Fraction empilée : numérateur au-dessus, barre horizontale, dénominateur en dessous */
+    .frac {
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      vertical-align:middle;
+      line-height:1;
+      font-family:'Sora', sans-serif;
+      font-weight:800;
+    }
+    .frac > .num {
+      display:block;
+      padding:0 4px 2px;
+      font-size:0.66em;
+    }
+    .frac > .den {
+      display:block;
+      padding:2px 4px 0;
+      font-size:0.66em;
+      border-top:2.5px solid currentColor;
+    }
+    .consigne-explik {
+      font-family:'Inter Tight', sans-serif;
+      font-size:11.5px;
+      font-weight:600;
+      color:var(--text2);
+      letter-spacing:-.05px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      text-align:center;
+      line-height:1.3;
+    }
+    /* En grand écran, "après la virgule" passe à la ligne */
+    .consigne-explik .explik-coupe {
+      display:block;
+      width:100%;
+      height:0;
+      font-size:0;
+    }
+    .consigne-explik .puce-nb {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:22px; height:22px;
+      border-radius:50%;
+      background:var(--gold-pale);
+      border:1.5px solid var(--gold-soft);
+      color:var(--gold-deep);
+      font-family:'Sora', sans-serif;
+      font-size:12px;
+      font-weight:800;
+    }
+    body.dys .consigne-explik { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+    /* Sur écran étroit : les 3 consignes repassent en colonne */
+    @media (max-width: 620px) {
+      .consigne-liste {
+        flex-direction:column;
+      }
+      .consigne-ligne {
+        padding:16px 14px;
+      }
+      /* Trait de séparation : horizontal au lieu de vertical */
+      .consigne-ligne + .consigne-ligne {
+        border-left:none;
+        border-top:1px solid var(--border);
+      }
+      .consigne-explik {
+        flex-direction:row;
+        gap:7px;
+      }
+      .consigne-explik .explik-coupe {
+        display:inline;
+        width:auto;
+        height:auto;
+        font-size:inherit;
+      }
+    }
+
+    /* Légende sous la liste */
+    .consigne-legende {
+      font-family:'Inter Tight', sans-serif;
+      font-size:12.5px;
+      font-weight:500;
+      color:var(--text2);
+      text-align:center;
+      margin-top:12px;
+      font-style:italic;
+    }
+    .consigne-legende .ex-garde {
+      background:rgba(212,164,100,.30);
+      border-radius:5px;
+      padding:1px 6px;
+      color:var(--navy);
+      font-weight:700;
+      font-style:normal;
+    }
+    body.dys .consigne-legende { font-family:'OpenDyslexic', Arial, sans-serif !important; }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-ligne">
+      <span id="header-lycee">—</span><span class="header-sep">·</span>
+      <span id="header-classe">—</span><span class="header-sep">·</span>
+      <span class="header-nom" id="header-nom">—</span>
+    </div>
+    <button class="header-audio-toggle" id="header-audio-toggle" onclick="toggleAudioMode()" title="Activer la lecture audio" aria-label="Activer la lecture audio">🔇</button>
+    <div class="header-dys-badge" id="header-dys-badge">Mode DYS</div>
+  </div>
+
+  <!-- CHARGEMENT -->
+  <div class="ecran fond-vert" id="ecran-chargement">
+    <div class="carte anime">
+      <div class="badge">Fiche remédiation</div>
+      <div class="titre">Chargement<br><span class="accent">en cours…</span></div>
+    </div>
+  </div>
+
+  <!-- ACCUEIL -->
+  <div class="ecran fond-vert cache" id="ecran-accueil">
+    <div class="carte anime">
+      <div class="badge">Fiche remédiation</div>
+      <div class="titre">Calculer avec<br><span class="accent">les puissances de 10</span></div>
+      <button class="audio-toggle-card" id="audio-toggle-card" onclick="toggleAudioMode()" aria-label="Activer la lecture audio">
+        <span class="ico">🔇</span>
+        <span class="lbl">Activer la lecture audio</span>
+      </button>
+      <button class="btn" onclick="allerVers('ecran-accueil','ecran-retenir')">Commencer</button>
+    </div>
+  </div>
+
+  <!-- À RETENIR -->
+  <div class="ecran fond-chaud cache" id="ecran-retenir">
+    <div class="cours-carte cours-carte-wide">
+      <div class="cours-titre-fiche">
+        <h1>Puissances de 10, <span class="accent">au pays des calculs faciles</span></h1>
+        <div class="sous">les règles s'appliquent, et on peut vérifier mentalement</div>
+      </div>
+      <div class="cours-prog-header">
+        <div class="cours-prog-badge">À retenir</div>
+        <div class="cours-prog-num">Les 3 règles + l'astuce du comptage des zéros</div>
+      </div>
+
+      <div class="deux-colonnes">
+        <!-- Colonne 1 : La règle -->
+        <div class="regle-bloc">
+          <div class="regle-label">La règle</div>
+          <div class="regle-texte">
+            <div class="demarrer-wrap" id="demarrer-wrap">
+              <button class="btn-demarrer" onclick="demarrerLecture()">Comprendre la règle ✨</button>
+            </div>
+            <div class="para-tw" id="para-1"></div>
+            <!-- Bloc cours : 3 règles appliquées aux puissances de 10 -->
+            <div id="tab-decalage-wrap" style="display:none;opacity:0;transition:opacity 0.5s ease;margin-top:18px;">
+              <div class="consigne-intro">
+                <span class="num-pastille">1</span> Les 3 règles de la fiche précédente <strong style="color:var(--gold-deep);">s'appliquent</strong> aux puissances de 10. Avantage : on peut <strong style="color:var(--gold-deep);">vérifier</strong> en comptant les zéros !
+              </div>
+              <!-- Les 3 règles -->
+              <div class="consigne-liste">
+                <div class="consigne-ligne" id="regle-dixieme">
+                  <span class="consigne-badge">Produit</span>
+                  <span class="consigne-nombre"><strong>10ⁿ × 10ᵖ = 10ⁿ⁺ᵖ</strong></span>
+                  <span class="consigne-explik">10³ × 10² = 10⁵<span class="explik-coupe"> </span>(= 100 000)</span>
+                </div>
+                <div class="consigne-ligne" id="regle-centieme">
+                  <span class="consigne-badge">Quotient</span>
+                  <span class="consigne-nombre"><strong>10ⁿ ÷ 10ᵖ = 10ⁿ⁻ᵖ</strong></span>
+                  <span class="consigne-explik">10⁵ ÷ 10² = 10³<span class="explik-coupe"> </span>(= 1 000)</span>
+                </div>
+                <div class="consigne-ligne" id="regle-millieme">
+                  <span class="consigne-badge">Puissance²</span>
+                  <span class="consigne-nombre"><strong>(10ⁿ)ᵖ = 10ⁿˣᵖ</strong></span>
+                  <span class="consigne-explik">(10²)³ = 10⁶<span class="explik-coupe"> </span>(= 1 000 000)</span>
+                </div>
+              </div>
+              <div class="consigne-legende">Avec des exposants <strong style="color:var(--navy);font-style:normal;">négatifs</strong>, la règle reste la même : <strong style="color:var(--navy);font-style:normal;">10⁵ × 10⁻² = 10³</strong> (5 + (−2) = 3) et <strong style="color:var(--navy);font-style:normal;">10³ ÷ 10⁻² = 10⁵</strong> (3 − (−2) = 5).</div>
+            </div>
+            <div class="suivant-wrap" id="suivant-wrap" style="display:none;">
+              <button class="btn-suivant" onclick="suivantPara()">Suivant →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Colonne 2 : L'exemple animé -->
+        <div class="anim-section" id="anim-section" style="display:none;opacity:0;transition:opacity 0.6s ease;">
+          <div class="anim-section-label" id="anim-label">Pourquoi les règles marchent pour 10ⁿ ?</div>
+
+          <!-- Expression à animer (dynamique selon l'exemple) -->
+          <div class="exo-expr" id="anim-expr">
+            <span class="tok" id="a-t1">10³ × 10²</span>
+            <span class="op" id="a-op1" style="display:none;"></span>
+            <span class="tok" id="a-t2" style="display:none;"></span>
+            <span class="tok" id="a-eq-res" style="display:none;"></span>
+          </div>
+
+          <div class="etape-bulle" id="etape-bulle">
+            <div class="etape-texte" id="etape-texte">Appuie sur <strong style="color:var(--gold-deep);">Étape suivante</strong> pour commencer l'exemple.</div>
+          </div>
+          <button class="btn-etape" id="btn-etape" onclick="etapeSuivante()">Étape suivante →</button>
+
+          <div class="btn-compris-wrap" id="btn-compris-wrap" style="display:none;opacity:0;transition:opacity 0.6s ease;margin-top:6px;">
+            <button class="btn-compris" onclick="allerVers('ecran-retenir','ecran-cours');setTimeout(()=>chargerEx(0),500)">Compris, on s'entraîne !</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXERCICES -->
+  <div class="ecran fond-chaud cache" id="ecran-cours">
+    <div class="cours-carte">
+      <div style="width:100%;margin-bottom:24px;">
+        <div class="cours-prog-header">
+          <div class="cours-prog-badge" id="cours-badge">Exercice 1 / 6</div>
+          <div class="cours-prog-num">Passer d'une écriture à l'autre</div>
+        </div>
+        <div class="cours-prog-track"><div class="cours-prog-fill" id="cours-fill"></div></div>
+      </div>
+
+      <div id="zone-exo" style="width:100%;background:rgba(194,138,66,0.06);border:1px solid rgba(212,130,10,0.18);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:20px;">
+
+        <!-- Bandeau type de série -->
+        <div id="ex-serie-label" style="font-family:'Inter Tight',sans-serif;font-size:11px;font-weight:700;color:var(--gold-deep);letter-spacing:.14em;text-transform:uppercase;text-align:center;"></div>
+
+        <!-- Expression affichée -->
+        <div class="exo-expr" id="ex-expr"></div>
+
+        <!-- Consigne de la question -->
+        <div id="ex-consigne" style="font-family:'Inter Tight',sans-serif;font-size:14.5px;font-weight:600;color:var(--text);text-align:center;letter-spacing:-.05px;"></div>
+
+        <!-- Zone des 2 boutons de choix (labels dynamiques) -->
+        <div id="ex-zone-choix" style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+          <div style="display:flex;gap:16px;justify-content:center;">
+            <button class="btn-sens" id="btn-choix-a" onclick="exClicChoix('a')">
+              <div class="ico" id="btn-choix-a-ico">×</div>
+              <div class="lbl" id="btn-choix-a-lbl">multiplication</div>
+            </button>
+            <button class="btn-sens" id="btn-choix-b" onclick="exClicChoix('b')">
+              <div class="ico" id="btn-choix-b-ico">÷</div>
+              <div class="lbl" id="btn-choix-b-lbl">division</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="ex-bulle-box" id="ex-bulle">
+          <div class="ex-bulle-txt" id="ex-bulle-txt">Regarde bien le <strong style="color:var(--gold-deep);">deuxième nombre</strong> de l'opération.</div>
+        </div>
+        <div class="ex-fb" id="ex-fb"></div>
+        <button class="btn-ex" id="ex-btn" style="display:none;">Valider →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSITION QUIZ -->
+  <div class="ecran fond-vert cache" id="ecran-transition-final">
+    <div class="carte anime">
+      <div class="badge">Vérification finale</div>
+      <div class="titre">Maintenant<br>prouve que tu maîtrises<br><span class="accent">les puissances de 10 !</span></div>
+      <div class="texte-intro">Tu vas voir 8 questions.<br>Produit, quotient, puissance de puissance, négatifs 💪</div>
+      <button class="btn" onclick="versQuizFinal()">C'est parti !</button>
+    </div>
+  </div>
+
+  <!-- QUIZ FINAL -->
+  <div class="ecran fond-vert cache" id="ecran-quiz-final">
+    <div class="quiz-carte">
+      <div class="prog-wrap">
+        <div class="prog-label" id="prog-label-f">Question 1 / 8</div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill-f"></div></div>
+      </div>
+      <div class="consigne-f" id="quiz-consigne-f">Choisis la bonne réponse :</div>
+      <div id="quiz-expr-zone" class="quiz-expr" style="margin:6px 0;"></div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-sens" id="qf-btn-a" onclick="repondreFinal('a')">
+          <div class="ico" id="qf-btn-a-ico">A</div>
+          <div class="lbl" id="qf-btn-a-lbl">réponse A</div>
+        </button>
+        <button class="btn-sens" id="qf-btn-b" onclick="repondreFinal('b')">
+          <div class="ico" id="qf-btn-b-ico">B</div>
+          <div class="lbl" id="qf-btn-b-lbl">réponse B</div>
+        </button>
+      </div>
+      <div class="feedback" id="feedback-f"></div>
+    </div>
+  </div>
+
+  <!-- RÉUSSI -->
+  <div class="ecran fond-vert cache" id="ecran-final-ok">
+    <div class="carte anime">
+      <div class="badge" style="background:var(--green-l);color:var(--green-dark);border-color:rgba(21,163,98,.25);">Notion maîtrisée ✓</div>
+      <div class="titre">Bravo <span class="accent" id="prenom-ok"></span> ! 🎉</div>
+      <div class="texte-intro" id="texte-ok"></div>
+    </div>
+  </div>
+
+  <!-- À REVOIR -->
+  <div class="ecran fond-vert cache" id="ecran-final-revoir">
+    <div class="carte anime">
+      <div class="badge" style="background:var(--red-l);color:var(--red-dark);border-color:rgba(212,38,38,.15);">À revoir</div>
+      <div class="titre">Pas encore <span class="accent" id="prenom-revoir"></span>…</div>
+      <div class="texte-intro" id="texte-revoir"></div>
+      <button class="btn" onclick="allerVers('ecran-final-revoir','ecran-retenir');reinitAnim()">Revoir le cours</button>
+    </div>
+  </div>
+
+  <!-- BLOQUÉ -->
+  <div class="ecran fond-vert cache" id="ecran-bloque">
+    <div class="carte anime">
+      <div class="badge" style="background:var(--red-l);color:var(--red-dark);border-color:rgba(212,38,38,.15);">Aide en route 🙋</div>
+      <div class="titre">Ton prof va venir<br>t'aider <span class="accent" id="prenom-bloque"></span></div>
+      <div class="texte-intro">Tu as fait 3 tentatives.<br>Ton enseignant a été alerté et va passer te voir.<br><br>Pas de panique, c'est normal d'avoir besoin d'aide !</div>
+    </div>
+  </div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxlBMjVXIg58lsopoeQ5sEZW-jcQIOrOtnWwCGVtHLGjcmpi9exaYZ3oAEre4deZum2/exec';
+  const FICHE_ID = 'puissances_calculer_puissances_10';
+  const THEME = 'Puissances et notation scientifique'; const NIVEAU = '3ème'; const MAX_TENTATIVES = 3;
+
+  const params = new URLSearchParams(window.location.search);
+  const nom       = params.get('nom')        || 'Élève';
+  const classe    = params.get('classe')     || '—';
+  const lycee     = params.get('lycee')      || '—';
+  const email     = params.get('email')      || '';
+  const prof      = params.get('prof')       || '';
+  const profEmail = params.get('prof_email') || '';
+  const dysActif = params.get('dys') === '1';
+
+  document.getElementById('header-lycee').textContent = lycee;
+  document.getElementById('header-classe').textContent = classe;
+  document.getElementById('header-nom').textContent = nom;
+  ['prenom-ok','prenom-revoir','prenom-bloque'].forEach(id => {
+    document.getElementById(id).textContent = nom.split(' ')[0];
+  });
+
+  if (dysActif) {
+    document.body.classList.add('dys');
+    document.getElementById('header-dys-badge').classList.add('visible');
+  }
+
+  let nbTentatives = 0;
+  const TOK = () => dysActif ? 1500 : 700;
+  const TKO = () => dysActif ? 2000 : 1200;
+
+  function sauvegarder(statut, score, tentNum, extra) {
+    if (!email) return;
+    fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(Object.assign({
+      type:'remediation', eleve_id:email, eleve_nom:nom, classe,
+      etablissement:lycee, fiche_id:FICHE_ID, theme:THEME, niveau:NIVEAU,
+      statut, score_quiz:score, tentative_num:tentNum,
+      prof, prof_email:profEmail, alerte_traitee:'non'
+    }, extra || {})) }).catch(()=>{});
+  }
+
+  async function verifierProgression() {
+    if (!email) { allerVers('ecran-chargement','ecran-accueil'); return; }
+    const timeout = setTimeout(() => allerVers('ecran-chargement','ecran-accueil'), 8000);
+    try {
+      const res = await fetch(APPS_SCRIPT_URL + '?type=remediation&etablissement=' + encodeURIComponent(lycee));
+      const data = await res.json();
+      clearTimeout(timeout);
+      if (data.status !== 'ok') { allerVers('ecran-chargement','ecran-accueil'); return; }
+      const lignes = (data.data||[]).filter(r => r.eleve_id===email && r.fiche_id===FICHE_ID);
+      nbTentatives = lignes.filter(r => ['quiz_final_echec','quiz_final_valide','echec_3_tentatives'].includes(r.statut)).length;
+      if (lignes.find(r => r.statut==='echec_3_tentatives')) { allerVers('ecran-chargement','ecran-bloque'); return; }
+      if (lignes.find(r => r.statut==='quiz_final_valide'))  { allerVers('ecran-chargement','ecran-final-ok'); return; }
+      allerVers('ecran-chargement','ecran-accueil');
+    } catch(e) { clearTimeout(timeout); allerVers('ecran-chargement','ecran-accueil'); }
+  }
+  verifierProgression();
+
+  // ══ MODE AUDIO GLOBAL (Web Speech API) ═══════════════════════
+  let audioMode = false;
+  let voixFr = null;
+
+  function chargerVoix() {
+    const voix = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    voixFr = voix.find(v => v.lang.startsWith('fr') && /natural|neural|premium|google|enhanced/i.test(v.name))
+          || voix.find(v => v.lang === 'fr-FR')
+          || voix.find(v => v.lang.startsWith('fr'))
+          || null;
+  }
+  if (window.speechSynthesis) {
+    chargerVoix();
+    window.speechSynthesis.onvoiceschanged = chargerVoix;
+  }
+
+  function nettoyerPourTTS(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return (tmp.textContent || tmp.innerText || '').trim();
+  }
+
+  function parler(html, options) {
+    options = options || {};
+    if (!window.speechSynthesis) return;
+    if (!audioMode && !options.force) return;
+    window.speechSynthesis.cancel();
+    const texte = nettoyerPourTTS(html);
+    if (!texte) return;
+    const utt = new SpeechSynthesisUtterance(texte);
+    utt.lang = 'fr-FR';
+    utt.rate = 0.92;
+    utt.pitch = 1.0;
+    utt.volume = 1.0;
+    if (voixFr) utt.voice = voixFr;
+    const headerBtn = document.getElementById('header-audio-toggle');
+    const cardBtn = document.getElementById('audio-toggle-card');
+    if (audioMode) {
+      if (headerBtn) headerBtn.classList.add('speaking');
+      if (cardBtn) cardBtn.classList.add('speaking');
+    }
+    utt.onend = () => {
+      if (headerBtn) headerBtn.classList.remove('speaking');
+      if (cardBtn) cardBtn.classList.remove('speaking');
+      if (options.onEnd) options.onEnd();
+    };
+    utt.onerror = () => {
+      if (headerBtn) headerBtn.classList.remove('speaking');
+      if (cardBtn) cardBtn.classList.remove('speaking');
+      if (options.onEnd) options.onEnd();
+    };
+    window.speechSynthesis.speak(utt);
+  }
+
+  function arreterLecture() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    const headerBtn = document.getElementById('header-audio-toggle');
+    const cardBtn = document.getElementById('audio-toggle-card');
+    if (headerBtn) headerBtn.classList.remove('speaking');
+    if (cardBtn) cardBtn.classList.remove('speaking');
+  }
+
+  function toggleAudioMode() {
+    audioMode = !audioMode;
+    const headerBtn = document.getElementById('header-audio-toggle');
+    const cardBtn = document.getElementById('audio-toggle-card');
+    if (audioMode) {
+      if (headerBtn) {
+        headerBtn.classList.add('active');
+        headerBtn.textContent = '🔊';
+        headerBtn.title = 'Désactiver la lecture audio';
+        headerBtn.setAttribute('aria-label', 'Désactiver la lecture audio');
+      }
+      if (cardBtn) {
+        cardBtn.classList.add('active');
+        cardBtn.querySelector('.ico').textContent = '🔊';
+        cardBtn.querySelector('.lbl').textContent = 'Audio activé — clique pour désactiver';
+        cardBtn.setAttribute('aria-label', 'Désactiver la lecture audio');
+      }
+    } else {
+      if (headerBtn) {
+        headerBtn.classList.remove('active', 'speaking');
+        headerBtn.textContent = '🔇';
+        headerBtn.title = 'Activer la lecture audio';
+        headerBtn.setAttribute('aria-label', 'Activer la lecture audio');
+      }
+      if (cardBtn) {
+        cardBtn.classList.remove('active', 'speaking');
+        cardBtn.querySelector('.ico').textContent = '🔇';
+        cardBtn.querySelector('.lbl').textContent = 'Activer la lecture audio';
+        cardBtn.setAttribute('aria-label', 'Activer la lecture audio');
+      }
+      arreterLecture();
+    }
+  }
+
+  // ══ TYPEWRITER POUR L'ÉCRAN "À RETENIR" ══════════════════════
+  const PARAGRAPHES_RETENIR = [
+    'Les <strong style="color:#C28A42;">puissances de 10</strong> obéissent aux mêmes règles que les autres puissances. Pour <strong style="color:#C28A42;">multiplier</strong> : on ajoute les exposants (<strong style="color:#C28A42;">10³ × 10² = 10⁵</strong>). Pour <strong style="color:#C28A42;">diviser</strong> : on soustrait (<strong style="color:#C28A42;">10⁵ ÷ 10² = 10³</strong>). Pour une <strong style="color:#C28A42;">puissance de puissance</strong> : on multiplie (<strong style="color:#C28A42;">(10²)³ = 10⁶</strong>).'
+  ];
+
+  let paraIndex = 0;
+  let twTimer = null;
+
+  function demarrerLecture() {
+    const dem = document.getElementById('demarrer-wrap');
+    dem.style.transition = 'opacity 0.3s ease';
+    dem.style.opacity = '0';
+    setTimeout(() => {
+      dem.style.display = 'none';
+      paraIndex = 0;
+      ecrireParagraphe(0);
+    }, 300);
+  }
+
+  function typewriter(elementId, html, charDelay, onDone) {
+    const el = document.getElementById(elementId);
+    el.innerHTML = '';
+    const tokens = [];
+    let i = 0;
+    while (i < html.length) {
+      if (html[i] === '<') {
+        const fin = html.indexOf('>', i);
+        if (fin === -1) { tokens.push(html[i]); i++; continue; }
+        tokens.push(html.substring(i, fin + 1));
+        i = fin + 1;
+      } else {
+        tokens.push(html[i]);
+        i++;
+      }
+    }
+    el.innerHTML = '<span class="tw-text"></span><span class="tw-cursor"></span>';
+    const txtSpan = el.querySelector('.tw-text');
+    let written = '';
+    let idx = 0;
+
+    function step() {
+      if (idx >= tokens.length) {
+        const cur = el.querySelector('.tw-cursor');
+        if (cur) cur.remove();
+        if (onDone) onDone();
+        return;
+      }
+      const tok = tokens[idx];
+      if (tok.startsWith('<')) {
+        written += tok;
+        idx++;
+        txtSpan.innerHTML = written;
+        step();
+      } else {
+        written += tok;
+        idx++;
+        txtSpan.innerHTML = written;
+        twTimer = setTimeout(step, charDelay);
+      }
+    }
+    step();
+  }
+
+  function ecrireParagraphe(i) {
+    document.getElementById('suivant-wrap').style.display = 'none';
+    const id = 'para-' + (i + 1);
+    parler(PARAGRAPHES_RETENIR[i]);
+    typewriter(id, PARAGRAPHES_RETENIR[i], 35, () => {
+      if (i === 0) {
+        const tab = document.getElementById('tab-decalage-wrap');
+        tab.style.display = 'block';
+        tab.offsetHeight;
+        setTimeout(() => {
+          tab.style.opacity = '1';
+          parler('Pour les puissances de 10, les règles sont les mêmes. Pour multiplier, on ajoute les exposants : 10 puissance 3 fois 10 puissance 2 égale 10 puissance 5. Pour diviser, on soustrait : 10 puissance 5 divisé par 10 puissance 2 égale 10 puissance 3. Pour une puissance de puissance, on multiplie : 10 puissance 2 le tout au cube égale 10 puissance 6. Et avec des exposants négatifs, ça marche aussi : il suffit d\'appliquer les règles des nombres relatifs.');
+          // Apparition progressive des 3 lignes de consigne, l'une après l'autre
+          const lignes = ['regle-dixieme', 'regle-centieme', 'regle-millieme'];
+          const delaiEntreLignes = dysActif ? 1100 : 750;
+          lignes.forEach((idLigne, idx) => {
+            setTimeout(() => {
+              const el = document.getElementById(idLigne);
+              if (el) el.classList.add('visible');
+            }, 350 + idx * delaiEntreLignes);
+          });
+          // Le bouton "Suivant" n'apparaît qu'une fois les 3 lignes affichées
+          const apresLignes = 350 + lignes.length * delaiEntreLignes + 300;
+          setTimeout(() => {
+            const wrap = document.getElementById('suivant-wrap');
+            wrap.style.display = 'flex';
+            wrap.style.animation = 'none';
+            wrap.offsetHeight;
+            wrap.style.animation = '';
+          }, apresLignes);
+        }, 50);
+      } else {
+        afficherAnimEtCompris();
+      }
+    });
+  }
+
+  function suivantPara() {
+    arreterLecture();
+    afficherAnimEtCompris();
+  }
+
+  function afficherAnimEtCompris() {
+    // Affiche uniquement la colonne d'animation. Le bouton "Compris" n'apparaîtra
+    // qu'à la toute fin du dernier exemple (voir etapeSuivante).
+    const anim = document.getElementById('anim-section');
+    anim.style.display = 'flex';
+    anim.offsetHeight;
+    setTimeout(() => {
+      anim.style.opacity = '1';
+    }, 50);
+  }
+
+  // ── ANIMATION COURS ─────────────────────────────────────────
+  let etapeActuelle = 0;
+  let exempleAnim = 0;
+
+  function hl(id, cls) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add(cls);
+  }
+  function unhl(id, cls) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove(cls);
+  }
+
+  // Surlignage d'une ligne de règle
+  const ALL_REGLES = ['regle-dixieme','regle-centieme','regle-millieme'];
+  function hlRegle(id) {
+    ALL_REGLES.forEach(rid => {
+      const el = document.getElementById(rid);
+      if (el) el.classList.remove('regle-active');
+    });
+    const el = document.getElementById(id);
+    if (el) el.classList.add('regle-active');
+  }
+  function unhlAllRegles() {
+    ALL_REGLES.forEach(rid => {
+      const el = document.getElementById(rid);
+      if (el) el.classList.remove('regle-active');
+    });
+  }
+
+  const EXEMPLES_ANIM = [
+    {
+      label: 'Produit : 10³ × 10²',
+      tokens: { t1:'10³ × 10²', op1:'', t2:'' },
+      etapes: [
+        { texte:"On veut calculer <span class='acc'>10³ × 10²</span>. Vérifions que la règle marche par calcul direct.", action:()=>{
+          hlRegle('regle-dixieme');
+        }},
+        { texte:"10³ = <span class='acc'>1 000</span> (3 zéros) et 10² = <span class='acc'>100</span> (2 zéros). Donc 1 000 × 100 = <span class='acc'>100 000</span>.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "1 000 × 100 = 100 000";
+        }},
+        { texte:"100 000 = 10⁵ (5 zéros). Et avec la règle : <span class='acc'>3 + 2 = 5</span>. ✓ La règle est cohérente !", action:()=>{
+          document.getElementById('a-t1').innerHTML = "= 10⁵";
+        }},
+        { texte:"<span class='acc'>10³ × 10² = 10⁵</span>. Les zéros s'ajoutent : 3 zéros + 2 zéros = 5 zéros. C'est une autre façon de voir la règle.", action:()=>{
+          unhlAllRegles();
+          hlRegle('regle-dixieme');
+          document.getElementById('a-t1').textContent = '10³ × 10²';
+          document.getElementById('a-eq-res').innerHTML = ' = 10⁵ (= 100 000)';
+          document.getElementById('a-eq-res').style.display = 'inline';
+          document.getElementById('a-eq-res').style.color = 'var(--green-dark)';
+        }, dernier:true },
+      ]
+    },
+    {
+      label: 'Avec un négatif : 10⁵ × 10⁻²',
+      tokens: { t1:'10⁵ × 10⁻²', op1:'', t2:'' },
+      etapes: [
+        { texte:"On veut calculer <span class='acc'>10⁵ × 10⁻²</span>. Que vaut un exposant négatif ?", action:()=>{
+          hlRegle('regle-centieme');
+        }},
+        { texte:"10⁻² = 0,01 = 1/100. Donc multiplier par 10⁻² revient à <span class='acc'>diviser par 100</span>.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "10⁵ × (1/100)";
+        }},
+        { texte:"100 000 ÷ 100 = <span class='acc'>1 000 = 10³</span>. Et avec la règle : <span class='acc'>5 + (−2) = 3</span>. ✓", action:()=>{
+          document.getElementById('a-t1').innerHTML = "= 10³";
+        }},
+        { texte:"<span class='acc'>10⁵ × 10⁻² = 10³</span>. La règle marche aussi avec des exposants négatifs : il suffit de bien faire l'addition des relatifs.", action:()=>{
+          unhlAllRegles();
+          hlRegle('regle-centieme');
+          document.getElementById('a-t1').textContent = '10⁵ × 10⁻²';
+          document.getElementById('a-eq-res').innerHTML = ' = 10³ (= 1 000)';
+          document.getElementById('a-eq-res').style.display = 'inline';
+          document.getElementById('a-eq-res').style.color = 'var(--green-dark)';
+        }, dernier:true },
+      ]
+    },
+    {
+      label: 'Diviser par un négatif : 10⁵ ÷ 10⁻²',
+      tokens: { t1:'10⁵ ÷ 10⁻²', op1:'', t2:'' },
+      etapes: [
+        { texte:"On veut calculer <span class='acc'>10⁵ ÷ 10⁻²</span>. La règle dit : soustraire les exposants. Mais soustraire un <span class='acc'>négatif</span> ?", action:()=>{
+          hlRegle('regle-millieme');
+        }},
+        { texte:"Règle des relatifs : <span class='acc'>5 − (−2) = 5 + 2 = 7</span>. Le − et le − s'annulent.", action:()=>{
+          document.getElementById('a-t1').innerHTML = "5 − (−2) = 7";
+        }},
+        { texte:"Donc 10⁵ ÷ 10⁻² = <span class='acc'>10⁷</span>. Vérif : diviser par 10⁻² = 0,01, c'est multiplier par 100. Et 100 000 × 100 = 10 000 000 = 10⁷. ✓", action:()=>{
+          document.getElementById('a-t1').innerHTML = "= 10⁷";
+        }},
+        { texte:"<span class='acc'>10⁵ ÷ 10⁻² = 10⁷</span>. À retenir : soustraire un négatif = ajouter le positif.", action:()=>{
+          unhlAllRegles();
+          hlRegle('regle-millieme');
+          document.getElementById('a-t1').textContent = '10⁵ ÷ 10⁻²';
+          document.getElementById('a-eq-res').innerHTML = ' = 10⁷';
+          document.getElementById('a-eq-res').style.display = 'inline';
+          document.getElementById('a-eq-res').style.color = 'var(--green-dark)';
+        }, dernier:true },
+      ]
+    }
+  ];
+
+  // Affiche un token : si c'est une fraction "n/d", l'écrit en barre horizontale ; sinon texte simple
+  function setToken(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const m = /^(\d+)\/(\d+)$/.exec(val);
+    if (m) {
+      el.innerHTML = '<span class="frac"><span class="num">' + m[1] + '</span><span class="den">' + m[2] + '</span></span>';
+    } else {
+      el.textContent = val;
+    }
+  }
+
+  function chargerExempleAnim(idx) {
+    exempleAnim = idx;
+    etapeActuelle = 0;
+    const ex = EXEMPLES_ANIM[idx];
+    document.getElementById('anim-label').textContent = ex.label;
+    setToken('a-t1', ex.tokens.t1);
+    document.getElementById('a-op1').textContent = ex.tokens.op1;
+    document.getElementById('a-t2').textContent = ex.tokens.t2;
+    // Pas d'opérateur ni de 2e nombre dans cette fiche : on masque a-op1 et a-t2
+    document.getElementById('a-op1').style.display = 'none';
+    document.getElementById('a-t2').style.display = 'none';
+    // Reset visuel
+    ['a-t1','a-op1','a-t2'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.remove('hl-or','hl-vert'); }
+    });
+    // Reset du suffixe "→ arrondi"
+    const eqRes = document.getElementById('a-eq-res');
+    if (eqRes) { eqRes.textContent = ''; eqRes.style.display = 'none'; eqRes.style.color = 'var(--navy)'; }
+    unhlAllRegles();
+    document.getElementById('etape-texte').innerHTML = 'Appuie sur <strong style="color:var(--gold-deep);">Étape suivante</strong> pour commencer l\'exemple.';
+    const btn = document.getElementById('btn-etape');
+    btn.textContent = 'Étape suivante →'; btn.classList.remove('recommencer'); btn.onclick = etapeSuivante;
+    // On masque le bouton "Compris" : il ne réapparaîtra qu'à la fin du dernier exemple
+    const compris = document.getElementById('btn-compris-wrap');
+    compris.style.display = 'none';
+    compris.style.opacity = '0';
+  }
+
+  function reinitAnim() {
+    chargerExempleAnim(0);
+    document.getElementById('demarrer-wrap').style.display = 'flex';
+    document.getElementById('demarrer-wrap').style.opacity = '1';
+    document.getElementById('para-1').innerHTML = '';
+    const tab = document.getElementById('tab-decalage-wrap');
+    tab.style.display = 'none';
+    tab.style.opacity = '0';
+    unhlAllRegles();
+    // On retire la classe "visible" des 3 lignes pour que l'apparition se rejoue
+    ['regle-dixieme', 'regle-centieme', 'regle-millieme'].forEach(idLigne => {
+      const el = document.getElementById(idLigne);
+      if (el) el.classList.remove('visible');
+    });
+    document.getElementById('suivant-wrap').style.display = 'none';
+    document.getElementById('anim-section').style.display = 'none';
+    document.getElementById('anim-section').style.opacity = '0';
+    document.getElementById('btn-compris-wrap').style.display = 'none';
+    document.getElementById('btn-compris-wrap').style.opacity = '0';
+    paraIndex = 0;
+  }
+
+  function etapeSuivante() {
+    const ex = EXEMPLES_ANIM[exempleAnim];
+    if (etapeActuelle >= ex.etapes.length) return;
+    const e = ex.etapes[etapeActuelle];
+    e.action();
+    const bulle = document.getElementById('etape-bulle');
+    bulle.style.animation = 'none'; bulle.offsetHeight;
+    bulle.style.animation = 'slideUp 0.4s cubic-bezier(.22,1,.36,1) both';
+    document.getElementById('etape-texte').innerHTML = e.texte;
+    parler(e.texte);
+    etapeActuelle++;
+    if (e.dernier) {
+      const btn = document.getElementById('btn-etape');
+      if (exempleAnim < EXEMPLES_ANIM.length - 1) {
+        btn.textContent = 'Voir l\'exemple suivant →';
+        btn.classList.remove('recommencer');
+        btn.onclick = () => chargerExempleAnim(exempleAnim + 1);
+      } else {
+        btn.textContent = '↺ Revoir les exemples';
+        btn.classList.add('recommencer');
+        btn.onclick = () => chargerExempleAnim(0);
+        // Dernier exemple terminé : on révèle le bouton "Compris, on s'entraîne"
+        const compris = document.getElementById('btn-compris-wrap');
+        compris.style.display = 'flex';
+        compris.offsetHeight;
+        setTimeout(() => { compris.style.opacity = '1'; }, 200);
+      }
+    }
+  }
+
+  // ── DONNÉES EXERCICES ───────────────────────────────────────
+  // Fiche ÉCRITURES = passer d'une écriture à l'autre (fraction / décimal / pourcentage).
+  // L'élève choisit toujours entre 2 propositions (bouton A / bouton B).
+  //
+  // Trois séries, alignées sur le cours :
+  //   Série 1 — "reconnaître"           : ces deux écritures désignent-elles le même nombre ?
+  //   Série 2 — "décimal ↔ pourcentage" : appliquer ×100 ou ÷100
+  //   Série 3 — "fraction → décimal"    : les fractions de référence (1/2, 1/4, 3/4, 1/10...)
+  //
+  // Champs communs :
+  //   serie     : 'A' | 'B' | 'C'
+  //   affichage : ce qui s'affiche en gros
+  //   choixA    : { ico, lbl }  — le contenu du bouton A
+  //   choixB    : { ico, lbl }  — le contenu du bouton B
+  //   bonChoix  : 'a' | 'b'
+  //   consigne  : la phrase de consigne
+  //   explik    : explication courte affichée quand c'est juste
+  //   hint      : indice affiché quand c'est faux
+  //   recap     : la chaîne de raisonnement complète (bulle après bonne réponse)
+
+  const EXERCICES = [
+    // ===== SÉRIE 1 — PRODUIT DE PUISSANCES DE 10 =====
+    {
+      serie:'A', affichage:'10⁴ × 10³',
+      consigne:'<strong>10⁴ × 10³</strong> = ?',
+      choixA:{ ico:'10¹²', lbl:'10 puissance 12' }, choixB:{ ico:'10⁷', lbl:'10 puissance 7' },
+      bonChoix:'b',
+      explik:'Multiplier → ajouter les exposants : 4 + 3 = 7. Donc 10⁴ × 10³ = 10⁷.',
+      hint:'Pour multiplier, on AJOUTE les exposants : 4 + 3 = 7. (10¹² serait 4 × 3 = 12, le piège classique.)',
+      recap:'<strong style="color:var(--green-dark);">10⁴ × 10³ = 10⁷</strong>. Ajouter les exposants, pas les multiplier !'
+    },
+    {
+      serie:'A', affichage:'10⁶ × 10⁻²',
+      consigne:'<strong>10⁶ × 10⁻²</strong> = ?',
+      choixA:{ ico:'10⁴', lbl:'10 puissance 4' }, choixB:{ ico:'10⁸', lbl:'10 puissance 8' },
+      bonChoix:'a',
+      explik:'6 + (−2) = 4. Donc 10⁶ × 10⁻² = 10⁴. Vérif : 1 000 000 × 0,01 = 10 000 = 10⁴. ✓',
+      hint:'Ajoute les exposants avec leur signe : 6 + (−2) = 4. Donc 10⁴.',
+      recap:'<strong style="color:var(--green-dark);">10⁶ × 10⁻² = 10⁴</strong>. La règle marche aussi avec des exposants négatifs.'
+    },
+    {
+      serie:'A', affichage:'10⁻³ × 10⁻²',
+      consigne:'<strong>10⁻³ × 10⁻²</strong> = ?',
+      choixA:{ ico:'10⁶', lbl:'10 puissance 6' }, choixB:{ ico:'10⁻⁵', lbl:'10 puissance moins 5' },
+      bonChoix:'b',
+      explik:'(−3) + (−2) = −5. Donc 10⁻³ × 10⁻² = 10⁻⁵. Vérif : 0,001 × 0,01 = 0,00001 = 10⁻⁵. ✓',
+      hint:'Deux négatifs s\'additionnent : (−3) + (−2) = −5. Donc 10⁻⁵.',
+      recap:'<strong style="color:var(--green-dark);">10⁻³ × 10⁻² = 10⁻⁵</strong>. Deux exposants négatifs donnent un exposant encore plus négatif.'
+    },
+
+    // ===== SÉRIE 2 — QUOTIENT DE PUISSANCES DE 10 =====
+    {
+      serie:'B', affichage:'10⁸ ÷ 10³',
+      consigne:'<strong>10⁸ ÷ 10³</strong> = ?',
+      choixA:{ ico:'10⁵', lbl:'10 puissance 5' }, choixB:{ ico:'10¹¹', lbl:'10 puissance 11' },
+      bonChoix:'a',
+      explik:'Diviser → soustraire : 8 − 3 = 5. Donc 10⁸ ÷ 10³ = 10⁵.',
+      hint:'Pour diviser, on SOUSTRAIT les exposants : 8 − 3 = 5.',
+      recap:'<strong style="color:var(--green-dark);">10⁸ ÷ 10³ = 10⁵</strong>. Soustraire les exposants pour diviser.'
+    },
+    {
+      serie:'B', affichage:'10⁴ ÷ 10⁻²',
+      consigne:'<strong>10⁴ ÷ 10⁻²</strong> = ?',
+      choixA:{ ico:'10²', lbl:'10 puissance 2' }, choixB:{ ico:'10⁶', lbl:'10 puissance 6' },
+      bonChoix:'b',
+      explik:'4 − (−2) = 4 + 2 = 6. Donc 10⁴ ÷ 10⁻² = 10⁶. (Diviser par 10⁻² = 0,01 revient à multiplier par 100.)',
+      hint:'Soustraire un négatif = ajouter le positif : 4 − (−2) = 6.',
+      recap:'<strong style="color:var(--green-dark);">10⁴ ÷ 10⁻² = 10⁶</strong>. Diviser par un petit nombre donne un grand résultat.'
+    },
+    {
+      serie:'B', affichage:'10⁻³ ÷ 10⁻⁷',
+      consigne:'<strong>10⁻³ ÷ 10⁻⁷</strong> = ?',
+      choixA:{ ico:'10⁻¹⁰', lbl:'10 puissance moins 10' }, choixB:{ ico:'10⁴', lbl:'10 puissance 4' },
+      bonChoix:'b',
+      explik:'(−3) − (−7) = −3 + 7 = 4. Donc 10⁻³ ÷ 10⁻⁷ = 10⁴.',
+      hint:'(−3) − (−7) : soustraire un négatif = ajouter. (−3) + 7 = 4.',
+      recap:'<strong style="color:var(--green-dark);">10⁻³ ÷ 10⁻⁷ = 10⁴</strong>. Bien gérer les signes : c\'est la clé.'
+    },
+
+    // ===== SÉRIE 3 — COMBINAISONS ET VÉRIFICATIONS =====
+    {
+      serie:'C', affichage:'(10²)⁴',
+      consigne:'<strong>(10²)⁴</strong> = ?',
+      choixA:{ ico:'10⁶', lbl:'10 puissance 6' }, choixB:{ ico:'10⁸', lbl:'10 puissance 8' },
+      bonChoix:'b',
+      explik:'Puissance de puissance → multiplier : 2 × 4 = 8. Donc (10²)⁴ = 10⁸. (Le piège 10⁶ vient d\'avoir ajouté au lieu de multiplier.)',
+      hint:'Pour une puissance de puissance, on MULTIPLIE les exposants : 2 × 4 = 8.',
+      recap:'<strong style="color:var(--green-dark);">(10²)⁴ = 10⁸</strong>. Puissance de puissance : on multiplie les exposants.'
+    },
+    {
+      serie:'C', affichage:'10⁵ × 10³ ÷ 10²',
+      consigne:'<strong>10⁵ × 10³ ÷ 10²</strong> = ?',
+      choixA:{ ico:'10⁶', lbl:'10 puissance 6' }, choixB:{ ico:'10¹⁰', lbl:'10 puissance 10' },
+      bonChoix:'a',
+      explik:'On combine : 5 + 3 − 2 = 6. Donc 10⁶.',
+      hint:'On chaîne les règles : + pour ×, − pour ÷. Total : 5 + 3 − 2 = 6.',
+      recap:'<strong style="color:var(--green-dark);">10⁵ × 10³ ÷ 10² = 10⁶</strong>. Les règles se combinent : additionner et soustraire directement.'
+    },
+    {
+      serie:'C', affichage:'10³ × 10⁻³',
+      consigne:'<strong>10³ × 10⁻³</strong> = ?',
+      choixA:{ ico:'10⁰ = 1', lbl:'10 puissance 0, qui vaut 1' }, choixB:{ ico:'10⁹', lbl:'10 puissance 9' },
+      bonChoix:'a',
+      explik:'3 + (−3) = 0. Donc 10³ × 10⁻³ = 10⁰ = 1. Vérif : 1000 × 0,001 = 1. ✓',
+      hint:'3 + (−3) = 0. Et 10⁰ = 1.',
+      recap:'<strong style="color:var(--green-dark);">10³ × 10⁻³ = 10⁰ = 1</strong>. Un nombre fois son inverse donne toujours 1.'
+    },
+  ];
+
+  // ── DONNÉES QUIZ FINAL ──────────────────────────────────────
+  const QUIZ_FINAL = [
+    {
+      serie:'A', affichage:'10² × 10⁵',
+      consigne:'<strong>10² × 10⁵</strong> = ?',
+      choixA:{ ico:'10⁷', lbl:'10 puissance 7' }, choixB:{ ico:'10¹⁰', lbl:'10 puissance 10' },
+      bonChoix:'a', hint:'Multiplier → ajouter : 2 + 5 = 7.'
+    },
+    {
+      serie:'B', affichage:'10⁹ ÷ 10⁴',
+      consigne:'<strong>10⁹ ÷ 10⁴</strong> = ?',
+      choixA:{ ico:'10⁵', lbl:'10 puissance 5' }, choixB:{ ico:'10¹³', lbl:'10 puissance 13' },
+      bonChoix:'a', hint:'Diviser → soustraire : 9 − 4 = 5.'
+    },
+    {
+      serie:'C', affichage:'(10³)²',
+      consigne:'<strong>(10³)²</strong> = ?',
+      choixA:{ ico:'10⁵', lbl:'10 puissance 5' }, choixB:{ ico:'10⁶', lbl:'10 puissance 6' },
+      bonChoix:'b', hint:'Puissance² → multiplier : 3 × 2 = 6.'
+    },
+    {
+      serie:'A', affichage:'10⁷ × 10⁻⁴',
+      consigne:'<strong>10⁷ × 10⁻⁴</strong> = ?',
+      choixA:{ ico:'10³', lbl:'10 puissance 3' }, choixB:{ ico:'10¹¹', lbl:'10 puissance 11' },
+      bonChoix:'a', hint:'Ajouter avec les signes : 7 + (−4) = 3.'
+    },
+    {
+      serie:'B', affichage:'10⁻² ÷ 10⁻⁵',
+      consigne:'<strong>10⁻² ÷ 10⁻⁵</strong> = ?',
+      choixA:{ ico:'10⁻⁷', lbl:'10 puissance moins 7' }, choixB:{ ico:'10³', lbl:'10 puissance 3' },
+      bonChoix:'b', hint:'(−2) − (−5) = −2 + 5 = 3. Donc 10³.'
+    },
+    {
+      serie:'C', affichage:'10⁴ × 10⁻⁴',
+      consigne:'<strong>10⁴ × 10⁻⁴</strong> = ?',
+      choixA:{ ico:'1', lbl:'un' }, choixB:{ ico:'10⁰', lbl:'10 puissance 0' },
+      bonChoix:'a', hint:'4 + (−4) = 0. Donc 10⁰ = 1. Les deux réponses sont équivalentes mais on préfère écrire 1.'
+    },
+    {
+      serie:'A', affichage:'10⁻³ × 10⁵',
+      consigne:'<strong>10⁻³ × 10⁵</strong> = ?',
+      choixA:{ ico:'10²', lbl:'10 puissance 2' }, choixB:{ ico:'10⁻¹⁵', lbl:'10 puissance moins 15' },
+      bonChoix:'a', hint:'(−3) + 5 = 2. Donc 10². (10⁻¹⁵ serait (−3) × 5, mais on ne multiplie pas !)'
+    },
+    {
+      serie:'B', affichage:'10⁶ ÷ 10⁹',
+      consigne:'<strong>10⁶ ÷ 10⁹</strong> = ?',
+      choixA:{ ico:'10⁻³', lbl:'10 puissance moins 3' }, choixB:{ ico:'10³', lbl:'10 puissance 3' },
+      bonChoix:'a', hint:'6 − 9 = −3. Donc 10⁻³ = 0,001.'
+    },
+  ];
+  const ORDRE_FINAL = [0,2,4,6,1,3,5,7];
+
+  // ── HELPERS UI ──────────────────────────────────────────────
+  let exIdx = 0, exBloque = false;
+
+  function setBulle(html) {
+    const b = document.getElementById('ex-bulle');
+    b.style.animation = 'none'; b.offsetHeight;
+    b.style.animation = 'slideUp 0.4s cubic-bezier(.22,1,.36,1) both';
+    document.getElementById('ex-bulle-txt').innerHTML = html;
+    parler(html);
+  }
+  function setFb(txt, ok) {
+    const fb = document.getElementById('ex-fb');
+    fb.textContent = txt;
+    fb.style.background = ok ? 'rgba(21,163,98,0.13)' : 'rgba(212,38,38,0.10)';
+    fb.style.color = ok ? 'var(--green-dark)' : 'var(--red-dark)';
+    fb.style.opacity = '1';
+    parler(txt);
+  }
+  function hideFb() { document.getElementById('ex-fb').style.opacity = '0'; }
+
+  // Libellé court de la série, pour le bandeau
+  function bandeauSerie(serie) {
+    if (serie === 'A') return '◆ Série 1 — Produit de puissances de 10';
+    if (serie === 'B') return '◆ Série 2 — Quotient de puissances de 10';
+    return '◆ Série 3 — Combinaisons et vérifications';
+  }
+
+  // ── EXERCICES ───────────────────────────────────────────────
+  function chargerEx(ai) {
+    exIdx = ai; exBloque = false;
+    const a = EXERCICES[ai];
+    document.getElementById('cours-badge').textContent = 'Exercice ' + (ai+1) + ' / ' + EXERCICES.length;
+    document.getElementById('cours-fill').style.width = (ai / EXERCICES.length * 100) + '%';
+
+    document.getElementById('ex-serie-label').textContent = bandeauSerie(a.serie);
+    document.getElementById('ex-expr').innerHTML = a.affichage;
+    document.getElementById('ex-consigne').innerHTML = a.consigne;
+
+    // Libellés des boutons
+    document.getElementById('btn-choix-a-ico').textContent = a.choixA.ico;
+    document.getElementById('btn-choix-a-lbl').textContent = a.choixA.lbl;
+    document.getElementById('btn-choix-b-ico').textContent = a.choixB.ico;
+    document.getElementById('btn-choix-b-lbl').textContent = a.choixB.lbl;
+
+    // Bulle d'aide selon la série
+    if (a.serie === 'A') {
+      setBulle('Multiplier 10ⁿ × 10ᵖ → <strong style="color:var(--gold-deep);">ajouter les exposants</strong> (avec leur signe). Tu peux vérifier en comptant les zéros !');
+    } else if (a.serie === 'B') {
+      setBulle('Diviser 10ⁿ ÷ 10ᵖ → <strong style="color:var(--gold-deep);">soustraire les exposants</strong>. Attention : soustraire un négatif = ajouter le positif.');
+    } else {
+      setBulle('Puissance de puissance → <strong style="color:var(--gold-deep);">multiplier les exposants</strong>. Et n\'oublie pas : <strong style="color:var(--gold-deep);">10⁰ = 1</strong>.');
+    }
+
+    // Reset boutons
+    const ba = document.getElementById('btn-choix-a');
+    const bb = document.getElementById('btn-choix-b');
+    ba.classList.remove('correct','wrong-flash');
+    bb.classList.remove('correct','wrong-flash');
+    ba.style.pointerEvents = 'auto';
+    bb.style.pointerEvents = 'auto';
+    ba.style.opacity = '1';
+    bb.style.opacity = '1';
+
+    hideFb();
+    document.getElementById('ex-btn').style.display = 'none';
+    window.scrollTo(0,0);
+  }
+
+  // Gestion du clic sur un bouton de choix
+  function exClicChoix(choix) {
+    if (exBloque) return;
+    const a = EXERCICES[exIdx];
+
+    const ba = document.getElementById('btn-choix-a');
+    const bb = document.getElementById('btn-choix-b');
+    const btnClique = choix === 'a' ? ba : bb;
+
+    if (choix !== a.bonChoix) {
+      // Mauvais choix : flash rouge + indice ciblé
+      btnClique.classList.add('wrong-flash');
+      setTimeout(() => btnClique.classList.remove('wrong-flash'), 500);
+      setFb('✗ Non — ' + a.hint, false);
+      return;
+    }
+
+    // Bon choix
+    btnClique.classList.add('correct');
+    const autreBtn = choix === 'a' ? bb : ba;
+    autreBtn.style.pointerEvents = 'none';
+    autreBtn.style.opacity = '0.4';
+    exBloque = true;
+    // L'explication reste affichée : c'est elle qui ancre le raisonnement
+    setFb('✓ ' + a.explik, true);
+    // La bulle d'aide se transforme en récap (sans masquer le feedback)
+    setBulle(a.recap);
+    // Le bouton "suivant" apparaît juste après, sans rien faire disparaître
+    const btn = document.getElementById('ex-btn');
+    btn.style.display = 'inline-block';
+    btn.textContent = (exIdx >= EXERCICES.length - 1) ? 'Terminer les exercices →' : 'Exercice suivant →';
+    btn.onclick = suiteEx;
+  }
+
+  function suiteEx() {
+    exIdx++;
+    if (exIdx >= EXERCICES.length) { allerVers('ecran-cours','ecran-transition-final'); return; }
+    chargerEx(exIdx);
+  }
+
+  // ── QUIZ FINAL ──────────────────────────────────────────────
+  let qFIdx = 0, bloqueF = false, bonnesF = 0;
+
+  function versQuizFinal() {
+    allerVers('ecran-transition-final','ecran-quiz-final');
+    qFIdx = 0; bonnesF = 0; bloqueF = false;
+    setTimeout(() => chargerQF(0), 500);
+  }
+
+  function chargerQF(i) {
+    bloqueF = false;
+    const a = QUIZ_FINAL[ORDRE_FINAL[i]];
+    document.getElementById('prog-label-f').textContent = 'Question ' + (i+1) + ' / ' + QUIZ_FINAL.length;
+    document.getElementById('prog-fill-f').style.width = (i / QUIZ_FINAL.length * 100) + '%';
+    document.getElementById('feedback-f').className = 'feedback';
+    document.getElementById('feedback-f').innerHTML = '';
+
+    document.getElementById('quiz-consigne-f').innerHTML = a.consigne;
+    document.getElementById('quiz-expr-zone').innerHTML = a.affichage;
+
+    // Libellés des boutons
+    document.getElementById('qf-btn-a-ico').textContent = a.choixA.ico;
+    document.getElementById('qf-btn-a-lbl').textContent = a.choixA.lbl;
+    document.getElementById('qf-btn-b-ico').textContent = a.choixB.ico;
+    document.getElementById('qf-btn-b-lbl').textContent = a.choixB.lbl;
+
+    // Reset boutons
+    const ba = document.getElementById('qf-btn-a');
+    const bb = document.getElementById('qf-btn-b');
+    ba.classList.remove('correct','wrong-flash');
+    bb.classList.remove('correct','wrong-flash');
+    ba.style.pointerEvents = 'auto';
+    bb.style.pointerEvents = 'auto';
+    ba.style.opacity = '1';
+    bb.style.opacity = '1';
+
+    parler(a.consigne.replace(/<[^>]+>/g, '') + ' ' + a.affichage);
+  }
+
+  function repondreFinal(choix) {
+    if (bloqueF) return;
+    const a = QUIZ_FINAL[ORDRE_FINAL[qFIdx]];
+    bloqueF = true;
+
+    const ba = document.getElementById('qf-btn-a');
+    const bb = document.getElementById('qf-btn-b');
+    const btnClique = choix === 'a' ? ba : bb;
+    const btnAutre = choix === 'a' ? bb : ba;
+    ba.style.pointerEvents = 'none';
+    bb.style.pointerEvents = 'none';
+
+    const fb = document.getElementById('feedback-f');
+    if (choix === a.bonChoix) {
+      bonnesF++;
+      btnClique.classList.add('correct');
+      fb.textContent = '✓ Correct !';
+      fb.style.background = 'rgba(21,163,98,0.13)';
+      fb.style.color = 'var(--green-dark)';
+      fb.className = 'feedback show';
+    } else {
+      btnClique.classList.add('wrong-flash');
+      btnAutre.classList.add('correct');
+      fb.textContent = '✗ Raté — ' + a.hint;
+      fb.style.background = 'rgba(212,38,38,0.10)';
+      fb.style.color = 'var(--red-dark)';
+      fb.className = 'feedback show';
+    }
+
+    setTimeout(() => {
+      qFIdx++;
+      if (qFIdx >= QUIZ_FINAL.length) finalResultat();
+      else {
+        const z = document.getElementById('quiz-expr-zone');
+        z.style.opacity = '0';
+        z.style.transition = 'opacity 0.3s';
+        setTimeout(() => {
+          chargerQF(qFIdx);
+          z.style.opacity = '1';
+          bloqueF = false;
+        }, 300);
+      }
+    }, 1600);
+  }
+
+  function finalResultat() {
+    const score = Math.round(bonnesF / QUIZ_FINAL.length * 100);
+    nbTentatives++;
+    if (score >= 80) {
+      sauvegarder('quiz_final_valide', score, nbTentatives);
+      document.getElementById('texte-ok').innerHTML = 'Tu as eu <strong style="color:var(--green-dark);">' + bonnesF + ' / ' + QUIZ_FINAL.length + '</strong> bonnes réponses. Tu maîtrises les calculs avec puissances de 10 : la base pour la notation scientifique ! 🎉';
+      allerVers('ecran-quiz-final','ecran-final-ok');
+    } else if (nbTentatives >= MAX_TENTATIVES) {
+      sauvegarder('echec_3_tentatives', score, nbTentatives, { prof_email:profEmail });
+      allerVers('ecran-quiz-final','ecran-bloque');
+    } else {
+      sauvegarder('quiz_final_echec', score, nbTentatives);
+      const r = MAX_TENTATIVES - nbTentatives;
+      document.getElementById('texte-revoir').innerHTML = 'Tu as eu <strong>' + bonnesF + ' / ' + QUIZ_FINAL.length + '</strong> bonnes réponses (' + score + '%).<br>Il te reste <strong>' + r + ' tentative' + (r>1?'s':'') + '</strong>.<br>Retiens : × → ajouter · ÷ → soustraire · attention aux signes ! Tu vas y arriver !';
+      allerVers('ecran-quiz-final','ecran-final-revoir');
+    }
+  }
+
+  function allerVers(a, b) {
+    const d=document.getElementById(a), ar=document.getElementById(b);
+    d.style.transition='opacity 0.5s ease'; d.style.opacity='0';
+    setTimeout(() => {
+      d.classList.add('cache'); d.style.opacity='1';
+      ar.classList.remove('cache'); ar.style.opacity='0';
+      ar.style.transition='opacity 0.5s ease';
+      setTimeout(() => { ar.style.opacity='1'; }, 20);
+    }, 500);
+  }
+</script>
+</body>
+</html>
